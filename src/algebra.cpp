@@ -10,6 +10,8 @@ using namespace std;
 
 // --------------- Point2D ---------------
 
+const Point2D Point2D::Zero;
+
 Point2D::Point2D() : Point2D(0, 0) { }
 
 Point2D::Point2D(double x, double y) {
@@ -50,6 +52,8 @@ ostream& operator<<(ostream& out, const Point2D& p) {
 }
 
 // --------------- Point3D ---------------
+
+const Point3D Point3D::Zero;
 
 Point3D::Point3D() : Point3D(0, 0, 0) { }
 
@@ -94,6 +98,8 @@ ostream& operator<<(ostream& out, const Point3D& p) {
 }
 
 // --------------- Vector3 ---------------
+
+const Vector3 Vector3::Zero;
 
 Vector3::Vector3() : Vector3(0, 0, 0) { }
 
@@ -262,14 +268,9 @@ bool Vector4::operator!=(const Vector4& other) const {
 
 // --------------- Matrix4 ---------------
 
-Matrix4::Matrix4() {
-    fill(values, values + 16, 0);
+const Matrix4 Matrix4::Identity(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
-    values[0] = 1;
-    values[5] = 1;
-    values[10] = 1;
-    values[15] = 1;
-}
+Matrix4::Matrix4() : Matrix4(Matrix4::Identity) { }
 
 Matrix4::Matrix4(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7,
                  double v8, double v9, double v10, double v11, double v12, double v13, double v14, double v15) {

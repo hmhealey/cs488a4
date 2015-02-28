@@ -14,6 +14,8 @@
 #endif
 
 struct Point2D {
+    static const Point2D Zero;
+
     double values[2];
 
     Point2D();
@@ -46,6 +48,8 @@ struct Point2D {
 std::ostream& operator<<(std::ostream& out, const Point2D& p);
 
 struct Point3D {
+    static const Point3D Zero;
+
     double values[3];
 
     Point3D();
@@ -85,6 +89,8 @@ struct Point3D {
 std::ostream& operator<<(std::ostream& out, const Point3D& p);
 
 struct Vector3 {
+    static const Vector3 Zero;
+
     double values[3];
 
     Vector3();
@@ -173,6 +179,8 @@ inline Point3D operator-(const Point3D& a, const Vector3& b) {
 }
 
 struct Vector4 {
+    static const Vector4 Zero;
+
     double values[];
 
     Vector4();
@@ -217,6 +225,8 @@ struct Vector4 {
 };
 
 struct Matrix4 {
+    static const Matrix4 Identity;
+
     double values[16];
 
     Matrix4();
