@@ -10,3 +10,6 @@ rt
 
 # assignment spec
 assign4.pdf
+
+# generated files
+data/*.png
