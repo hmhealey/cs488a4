@@ -6,6 +6,7 @@
 #define SCENE_HPP
 
 #include <list>
+#include <string>
 
 #include "algebra.hpp"
 #include "material.hpp"

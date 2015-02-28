@@ -2,14 +2,16 @@
 
 #include "scene_lua.hpp"
 
+using namespace std;
+
 int main(int argc, char** argv) {
-    std::string filename = "scene.lua";
+    string filename = "scene.lua";
     if (argc >= 2) {
         filename = argv[1];
     }
 
     if (!run_lua(filename)) {
-        std::cerr << "Could not open " << filename << std::endl;
+        cerr << "Could not open " << filename << endl;
         return 1;
     }
 

@@ -1,21 +1,15 @@
 #include "primitive.hpp"
 
-Primitive::~Primitive()
-{
-}
+Primitive::~Primitive() { }
 
-Sphere::~Sphere()
-{
-}
+Sphere::~Sphere() { }
 
-Cube::~Cube()
-{
-}
+Cube::~Cube() { }
 
-NonhierSphere::~NonhierSphere()
-{
-}
+NonhierSphere::NonhierSphere(const Point3D& pos, double radius) : pos(pos), radius(radius) { }
 
-NonhierBox::~NonhierBox()
-{
-}
+NonhierSphere::~NonhierSphere() { }
+
+NonhierBox::NonhierBox(const Point3D& pos, double size) : pos(pos), size(size) { }
+
+NonhierBox::~NonhierBox() { }

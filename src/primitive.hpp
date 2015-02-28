@@ -5,44 +5,35 @@
 
 class Primitive {
 public:
-  virtual ~Primitive();
+    virtual ~Primitive();
 };
 
 class Sphere : public Primitive {
 public:
-  virtual ~Sphere();
+    virtual ~Sphere();
 };
 
 class Cube : public Primitive {
 public:
-  virtual ~Cube();
+    virtual ~Cube();
 };
 
 class NonhierSphere : public Primitive {
-public:
-  NonhierSphere(const Point3D& pos, double radius)
-    : m_pos(pos), m_radius(radius)
-  {
-  }
-  virtual ~NonhierSphere();
+    Point3D pos;
+    double radius;
 
-private:
-  Point3D m_pos;
-  double m_radius;
+public:
+    NonhierSphere(const Point3D& pos, double radius);
+    virtual ~NonhierSphere();
 };
 
 class NonhierBox : public Primitive {
-public:
-  NonhierBox(const Point3D& pos, double size)
-    : m_pos(pos), m_size(size)
-  {
-  }
-  
-  virtual ~NonhierBox();
+    Point3D pos;
+    double size;
 
-private:
-  Point3D m_pos;
-  double m_size;
+public:
+    NonhierBox(const Point3D& pos, double size);
+    virtual ~NonhierBox();
 };
 
 #endif

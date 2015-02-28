@@ -1,31 +1,28 @@
 #include "mesh.hpp"
+
 #include <iostream>
 
-Mesh::Mesh(const std::vector<Point3D>& verts,
-           const std::vector< std::vector<int> >& faces)
-  : m_verts(verts),
-    m_faces(faces)
-{
-}
+using namespace std;
 
-std::ostream& operator<<(std::ostream& out, const Mesh& mesh)
-{
-  std::cerr << "mesh({";
-  for (std::vector<Point3D>::const_iterator I = mesh.m_verts.begin(); I != mesh.m_verts.end(); ++I) {
-    if (I != mesh.m_verts.begin()) std::cerr << ",\n      ";
-    std::cerr << *I;
-  }
-  std::cerr << "},\n\n     {";
-  
-  for (std::vector<Mesh::Face>::const_iterator I = mesh.m_faces.begin(); I != mesh.m_faces.end(); ++I) {
-    if (I != mesh.m_faces.begin()) std::cerr << ",\n      ";
-    std::cerr << "[";
-    for (Mesh::Face::const_iterator J = I->begin(); J != I->end(); ++J) {
-      if (J != I->begin()) std::cerr << ", ";
-      std::cerr << *J;
+Mesh::Mesh(const vector<Point3D>& verts, const vector<Face>& faces) : verts(verts), faces(faces) { }
+
+ostream& operator<<(ostream& out, const Mesh& mesh) {
+    cerr << "mesh({";
+    for (auto i = mesh.verts.cbegin(); i != mesh.verts.cend(); ++i) {
+        if (i != mesh.verts.cbegin()) cerr << ",\n      ";
+        cerr << *i;
     }
-    std::cerr << "]";
-  }
-  std::cerr << "});" << std::endl;
-  return out;
+    cerr << "},\n\n     {";
+  
+    for (auto i = mesh.faces.cbegin(); i != mesh.faces.cend(); ++i) {
+        if (i != mesh.faces.cbegin()) cerr << ",\n      ";
+        cerr << "[";
+        for (auto j = i->cbegin(); j != i->cend(); ++j) {
+            if (j != i->cbegin()) cerr << ", ";
+            cerr << *j;
+        }
+        cerr << "]";
+    }
+    cerr << "});" << endl;
+    return out;
 }

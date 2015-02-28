@@ -5,27 +5,22 @@
 
 class Material {
 public:
-  virtual ~Material();
-  virtual void apply_gl() const = 0;
+    virtual ~Material();
 
 protected:
-  Material()
-  {
-  }
+    Material() { }
 };
 
 class PhongMaterial : public Material {
 public:
-  PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
-  virtual ~PhongMaterial();
-
-  virtual void apply_gl() const;
+    PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
+    virtual ~PhongMaterial();
 
 private:
-  Colour m_kd;
-  Colour m_ks;
+    Colour diffuse;
+    Colour specular;
 
-  double m_shininess;
+    double shininess;
 };
 
 
