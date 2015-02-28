@@ -13,3 +13,6 @@ assign4.pdf
 
 # generated files
 data/*.png
+
+# incredibly annoying OS X files
+.DS_Store
