@@ -13,8 +13,8 @@ void a4_render(// What to render
                // Image size
                int width, int height,
                // Viewing parameters
-               const Point3D& eye, const Vector3D& view,
-               const Vector3D& up, double fov,
+               const Point3D& eye, const Vector3& view,
+               const Vector3& up, double fov,
                // Lighting parameters
                const Colour& ambient,
                const std::list<Light*>& lights

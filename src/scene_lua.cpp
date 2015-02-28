@@ -332,7 +332,7 @@ int gr_render_cmd(lua_State* L)
   int height = luaL_checknumber(L, 4);
 
   Point3D eye;
-  Vector3D view, up;
+  Vector3 view, up;
   
   get_tuple(L, 5, &eye[0], 3);
   get_tuple(L, 6, &view[0], 3);
@@ -451,7 +451,7 @@ int gr_node_scale_cmd(lua_State* L)
     values[i] = luaL_checknumber(L, i + 2);
   }
 
-  self->scale(Vector3D(values[0], values[1], values[2]));
+  self->scale(Vector3(values[0], values[1], values[2]));
 
   return 0;
 }
@@ -473,7 +473,7 @@ int gr_node_translate_cmd(lua_State* L)
     values[i] = luaL_checknumber(L, i + 2);
   }
 
-  self->translate(Vector3D(values[0], values[1], values[2]));
+  self->translate(Vector3(values[0], values[1], values[2]));
 
   return 0;
 }

@@ -2,25 +2,26 @@
 #define SCENE_HPP
 
 #include <list>
+
 #include "algebra.hpp"
-#include "primitive.hpp"
 #include "material.hpp"
+#include "primitive.hpp"
 
 class SceneNode {
 public:
   SceneNode(const std::string& name);
   virtual ~SceneNode();
 
-  const Matrix4x4& get_transform() const { return m_trans; }
-  const Matrix4x4& get_inverse() const { return m_invtrans; }
+  const Matrix4& get_transform() const { return m_trans; }
+  const Matrix4& get_inverse() const { return m_invtrans; }
   
-  void set_transform(const Matrix4x4& m)
+  void set_transform(const Matrix4& m)
   {
     m_trans = m;
-    m_invtrans = m.invert();
+    m_invtrans = m.inverse();
   }
 
-  void set_transform(const Matrix4x4& m, const Matrix4x4& i)
+  void set_transform(const Matrix4& m, const Matrix4& i)
   {
     m_trans = m;
     m_invtrans = i;
@@ -39,8 +40,8 @@ public:
   // Callbacks to be implemented.
   // These will be called from Lua.
   void rotate(char axis, double angle);
-  void scale(const Vector3D& amount);
-  void translate(const Vector3D& amount);
+  void scale(const Vector3& amount);
+  void translate(const Vector3& amount);
 
   // Returns true if and only if this node is a JointNode
   virtual bool is_joint() const;
@@ -52,8 +53,8 @@ protected:
   std::string m_name;
 
   // Transformations
-  Matrix4x4 m_trans;
-  Matrix4x4 m_invtrans;
+  Matrix4 m_trans;
+  Matrix4 m_invtrans;
 
   // Hierarchy
   typedef std::list<SceneNode*> ChildList;
