@@ -119,33 +119,6 @@ int gr_node_cmd(lua_State* L)
   return 1;
 }
 
-// Create a joint node
-extern "C"
-int gr_joint_cmd(lua_State* L)
-{
-  GRLUA_DEBUG_CALL;
-  
-  gr_node_ud* data = (gr_node_ud*)lua_newuserdata(L, sizeof(gr_node_ud));
-  data->node = 0;
-
-  const char* name = luaL_checkstring(L, 1);
-  JointNode* node = new JointNode(name);
-
-  double x[3], y[3];
-  get_tuple(L, 2, x, 3);
-  get_tuple(L, 3, y, 3);
-
-  node->setXRange(x[0], x[1], x[2]);
-  node->setYRange(y[0], y[1], y[2]);
-  
-  data->node = node;
-
-  luaL_getmetatable(L, "gr.node");
-  lua_setmetatable(L, -2);
-
-  return 1;
-}
-
 // Create a sphere node
 extern "C"
 int gr_sphere_cmd(lua_State* L)
@@ -531,7 +504,6 @@ int gr_node_gc_cmd(lua_State* L)
 static const luaL_reg grlib_functions[] = {
   {"node", gr_node_cmd},
   {"sphere", gr_sphere_cmd},
-  {"joint", gr_joint_cmd},
   {"material", gr_material_cmd},
   // New for assignment 4
   {"cube", gr_cube_cmd},
