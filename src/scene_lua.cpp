@@ -135,8 +135,8 @@ int gr_joint_cmd(lua_State* L)
   get_tuple(L, 2, x, 3);
   get_tuple(L, 3, y, 3);
 
-  node->set_joint_x(x[0], x[1], x[2]);
-  node->set_joint_y(y[0], y[1], y[2]);
+  node->setXRange(x[0], x[1], x[2]);
+  node->setYRange(y[0], y[1], y[2]);
   
   data->node = node;
 
@@ -429,7 +429,7 @@ int gr_node_set_material_cmd(lua_State* L)
 
   Material* material = matdata->material;
 
-  self->set_material(material);
+  self->setMaterial(material);
 
   return 0;
 }
