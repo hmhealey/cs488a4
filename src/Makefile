@@ -12,7 +12,7 @@ ifeq ($(UNAME_S),Darwin)
 	CPPFLAGS = -I/usr/local/include/lua5.1 -I/usr/local/include
 endif
 
-CXXFLAGS = $(CPPFLAGS) -W -Wall -g -MMD
+CXXFLAGS = $(CPPFLAGS) -W -Wall -g -MMD -std=c++11
 CXX = g++
 MAIN = rt
 
