@@ -6,9 +6,9 @@
 
 using namespace std;
 
-void a4_render(SceneNode* root, const string& filename, int width, int height, 
-               const Point3D& eye, const Vector3& view, const Vector3& up, double fov, 
-               const Colour& ambient, const list<Light*>& lights) {
+void render(SceneNode* root, const string& filename, int width, int height, 
+            const Point3D& eye, const Vector3& view, const Vector3& up, double fov, 
+            const Colour& ambient, const list<Light*>& lights) {
     cerr << "Stub: a4_render(" << root << ",\n     "
          << filename << ", " << width << ", " << height << ",\n     "
          << eye << ", " << view << ", " << up << ", " << fov << ",\n     "
