@@ -2,12 +2,12 @@
  * Harrison Healey - hmhealey - 20376857 *
  *****************************************/
 
-#include "Scene.hpp"
+#include "scene.hpp"
 
 #include <iostream>
 
-#include "Algebra.hpp"
-#include "Primitive.hpp"
+#include "algebra.hpp"
+#include "primitive.hpp"
 
 using namespace std;
 

@@ -7,8 +7,8 @@
 
 #include <list>
 
-#include "Algebra.hpp"
-#include "Material.hpp"
+#include "algebra.hpp"
+#include "material.hpp"
 
 class JointNode;
 class Primitive;

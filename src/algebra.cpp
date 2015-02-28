@@ -2,7 +2,7 @@
  * Harrison Healey - hmhealey - 20376857 *
  *****************************************/
 
-#include "Algebra.hpp"
+#include "algebra.hpp"
 
 double Vector3::normalize()
 {
