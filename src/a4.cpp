@@ -25,15 +25,27 @@ void render(SceneNode* root, const string& filename, int width, int height,
     Image image(width, height, 3);
 
     for (int y = 0; y < height; y++) {
-        for (int x = 0; x < height; x++) {
-            // Red: increasing from top to bottom
-            image(x, y, 0) = (double) y / height;
-            // Green: increasing from left to right
-            image(x, y, 1) = (double) x / width;
-            // Blue: in lower-left and upper-right corners
-            image(x, y, 2) = ((y < height / 2 && x < height / 2) || (y >= height / 2 && x >= height / 2)) ? 1.0 : 0.0;
+        for (int x = 0; x < width; x++) {
+            Colour background = getBackground(x, y, width, height);
+            
+            image(x, y, 0) = background.r();
+            image(x, y, 1) = background.g();
+            image(x, y, 2) = background.b();
         }
     }
 
     image.savePng(filename);
+}
+
+Colour getBackground(int x, int y, int width, int height) {
+    // red increasing from top to bottom
+    double red = (double) y / height;
+
+    // green increasing from left to right
+    double green = (double) x / width;
+
+    // blue in the lower left and upper right corners
+    double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;
+
+    return Colour(red, green, blue);
 }
