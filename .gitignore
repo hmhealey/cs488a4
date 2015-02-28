@@ -1,0 +1,12 @@
+# temporary files
+*.d
+*.o
+*.swp
+*.stash
+
+# executable
+*.app
+rt
+
+# assignment spec
+assign4.pdf
