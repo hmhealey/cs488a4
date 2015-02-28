@@ -40,6 +40,11 @@ public:
     void rotate(char axis, double angle);
     void scale(const Vector3& amount);
     void translate(const Vector3& amount);
+
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
+
+protected:
+    bool raycastChildren(const Point3D& point, const Vector3& direction) const;
 };
 
 class GeometryNode : public SceneNode {
@@ -53,6 +58,8 @@ public:
     const Material* getMaterial() const;
     Material* getMaterial();
     void setMaterial(Material* material);
+
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
 };
 
 #endif

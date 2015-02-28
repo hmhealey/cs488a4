@@ -17,6 +17,8 @@ class Mesh : public Primitive {
 public:
     Mesh(const std::vector<Point3D>& verts, const std::vector<Face>& faces);
 
+    virtual double getIntersection(const Point3D& point, const Vector3& direction) const;
+
     friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
 };
 

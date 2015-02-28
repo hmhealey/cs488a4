@@ -1,10 +1,18 @@
 #include "mesh.hpp"
 
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
 Mesh::Mesh(const vector<Point3D>& verts, const vector<Face>& faces) : verts(verts), faces(faces) { }
+
+double Mesh::getIntersection(const Point3D& point, const Vector3& direction) const {
+    // TODO
+    (void) point;
+    (void) direction;
+    return numeric_limits<double>::infinity();
+}
 
 ostream& operator<<(ostream& out, const Mesh& mesh) {
     cerr << "mesh({";
