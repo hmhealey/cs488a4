@@ -9,6 +9,7 @@
 
 #include "algebra.hpp"
 #include "primitive.hpp"
+#include "raycast.hpp"
 
 using namespace std;
 
@@ -77,20 +78,19 @@ void SceneNode::translate(const Vector3& amount) {
     transform = transform * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
-bool SceneNode::raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
-    return raycastChildren(point, direction, intersection);
+bool SceneNode::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    return raycastChildren(point, direction, hit);
 }
 
-bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
+bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
     // convert the ray into our local coordinate system
     bool intersected = false;
 
     for (auto i = children.cbegin(); i != children.cend(); i++) {
-        Point3D childIntersection;
-
-        if ((*i)->raycast(point, direction, childIntersection)) {
-            if (!intersected || (childIntersection - point).length() < (intersection - point).length()) {
-                intersection = childIntersection;
+        RaycastHit childHit;
+        if ((*i)->raycast(point, direction, childHit)) {
+            if (!intersected || (childHit.point - point).length() < (hit.point - point).length()) {
+                hit = childHit;
             }
 
             intersected = true;
@@ -118,21 +118,21 @@ void GeometryNode::setMaterial(Material* material) {
     this->material = material;
 }
 
-bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
+bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
     double t = primitive->getIntersection(point, direction);
 
-    Point3D childIntersection;
-    bool childIntersected = raycastChildren(point, direction, childIntersection);
+    RaycastHit childHit;
+    bool childIntersected = raycastChildren(point, direction, childHit);
 
     if (t >= 0 && t != numeric_limits<double>::infinity()) {
         // ray intersected us
-        intersection = point + t * direction;
+        hit.point = point + t * direction;
 
         if (childIntersected) {
             // and children
-            if ((point - childIntersection).length() < (point - intersection).length()) {
+            if ((childHit.point - point).length() < (hit.point - point).length()) {
                 // and it hit the child first
-                intersection = childIntersection;
+                hit = childHit;
             }
         }
 
@@ -141,7 +141,7 @@ bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Point
         // ray missed us
         if (childIntersected) {
             // but hit a child
-            intersection = childIntersection;
+            hit = childHit;
 
             return true;
         } else {

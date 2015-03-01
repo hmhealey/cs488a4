@@ -6,6 +6,7 @@
 #include "algebra.hpp"
 #include "image.hpp"
 #include "primitive.hpp"
+#include "raycast.hpp"
 
 using namespace std;
 
@@ -50,11 +51,9 @@ void render(SceneNode* root, const string& filename, int width, int height,
             Point3D pk(x, y, 0);
             Point3D pw = m * pk;
 
-            Point3D intersection;
-
-            Colour colour;
-            if (root->raycast(pw, (pw - eye).normalized(), intersection)) {
-                dist[y][x] = (intersection - eye).length();
+            RaycastHit hit;
+            if (root->raycast(pw, (pw - eye).normalized(), hit)) {
+                dist[y][x] = (hit.point - eye).length();
                 maxDist = max(maxDist, dist[y][x]);
             } else {
                 dist[y][x] = -1;
