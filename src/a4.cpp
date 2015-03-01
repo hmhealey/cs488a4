@@ -20,19 +20,23 @@ void render(SceneNode* root, const string& filename, int width, int height,
     double h = 2 * d * tan(fov);
     double w = h * (width / height);
 
+    // change 0..1 coordinate space to -width/2..width/2
     Matrix4 t1 = Matrix4::makeTranslation(-width / 2.0, -height / 2.0, d);
 
+    // stretch screen to fit plane while maintaining aspect ratio
     Matrix4 s2 = Matrix4::makeScaling(-h / height, w / width, 1);
 
     Vector3 wv = view.normalized();
     Vector3 uv = (up.cross(wv)).normalized();
     Vector3 vv = wv.cross(uv);
 
+    // rotate view coordinates onto world
     Matrix4 r3(uv.x(), vv.x(), wv.x(), 0,
                uv.y(), vv.y(), wv.y(), 0,
                uv.z(), vv.z(), wv.z(), 0,
                0, 0, 0, 1);
 
+    // move to eye point
     Matrix4 t4 = Matrix4::makeTranslation(eye.x(), eye.y(), eye.z());
 
     Matrix4 m = t4 * r3 * s2 * t1;

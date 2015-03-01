@@ -33,10 +33,59 @@ double Sphere::getIntersection(const Point3D& point, const Vector3& direction) c
 Cube::~Cube() { }
 
 double Cube::getIntersection(const Point3D& point, const Vector3& direction) const {
-    // TODO
-    (void) point;
-    (void) direction;
-    return numeric_limits<double>::infinity();
+    double ret = numeric_limits<double>::infinity();
+
+    // left plane at x = 0
+    {
+        double t = (0 - point.x()) / direction.x();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.y() >= 0 && intersection.y() <= 1 && intersection.z() >= 0 && intersection.z() <= 1) {
+            ret = min(ret, t);
+        }
+    }
+
+    // right plane at x = 1
+    {
+        double t = (1 - point.x()) / direction.x();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.y() >= 0 && intersection.y() <= 1 && intersection.z() >= 0 && intersection.z() <= 1) {
+            ret = min(ret, t);
+        }
+    }
+
+    // bottom plane at y = 0
+    {
+        double t = (0 - point.y()) / direction.y();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= 0 && intersection.x() <= 1 && intersection.z() >= 0 && intersection.z() <= 1) {
+            ret = min(ret, t);
+        }
+    }
+
+    // top plane at y = 1
+    {
+        double t = (1 - point.y()) / direction.y();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= 0 && intersection.x() <= 1 && intersection.z() >= 0 && intersection.z() <= 1) {
+            ret = min(ret, t);
+        }
+    }
+
+    // front plane at z = 0
+    {
+        double t = (1 - point.z()) / direction.z();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= 0 && intersection.x() <= 1 && intersection.y() >= 0 && intersection.y() <= 1) {
+            ret = min(ret, t);
+        }
+    }
+
+    return ret;
 }
 
 // --------------- NonhierSphere ---------------
@@ -65,8 +114,67 @@ NonhierBox::NonhierBox(const Point3D& pos, double size) : pos(pos), size(size) {
 NonhierBox::~NonhierBox() { }
 
 double NonhierBox::getIntersection(const Point3D& point, const Vector3& direction) const {
-    // TODO
-    (void) point;
-    (void) direction;
-    return numeric_limits<double>::infinity();
+    double ret = numeric_limits<double>::infinity();
+
+    // left plane at x = pos.x
+    {
+        double t = (pos.x() - point.x()) / direction.x();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.y() >= pos.y() && intersection.y() <= pos.y() + size && intersection.z() >= pos.z() && intersection.z() <= pos.z() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    // right plane at x = pos.x + size
+    {
+        double t = (pos.x() + size - point.x()) / direction.x();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.y() >= pos.y() && intersection.y() <= pos.y() + size && intersection.z() >= pos.z() && intersection.z() <= pos.z() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    // bottom plane at y = pos.y
+    {
+        double t = (pos.y() - point.y()) / direction.y();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= pos.x() && intersection.x() <= pos.x() + size && intersection.z() >= pos.z() && intersection.z() <= pos.z() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    // top plane at y = pos.y + size
+    {
+        double t = (pos.y() + size - point.y()) / direction.y();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= pos.x() && intersection.x() <= pos.x() + size && intersection.z() >= pos.z() && intersection.z() <= pos.z() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    // front plane at z = pos.z
+    {
+        double t = (pos.z() - point.z()) / direction.z();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= pos.x() && intersection.x() <= pos.x() + size && intersection.y() >= pos.y() && intersection.y() <= pos.y() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    // back plane at z = pos.z + size
+    {
+        double t = (pos.z() + size - point.z()) / direction.z();
+        Point3D intersection = point + t * direction;
+
+        if (intersection.x() >= pos.x() && intersection.x() <= pos.x() + size && intersection.y() >= pos.y() && intersection.y() <= pos.y() + size) {
+            ret = min(ret, t);
+        }
+    }
+
+    return ret;
 }

@@ -37,7 +37,7 @@ public:
 
 class NonhierBox : public Primitive {
     Point3D pos;
-    double size;
+    double size;    
 
 public:
     NonhierBox(const Point3D& pos, double size);

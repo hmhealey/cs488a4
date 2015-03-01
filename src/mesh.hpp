@@ -11,6 +11,7 @@ typedef std::vector<int> Face;
 
 // A polygonal mesh.
 class Mesh : public Primitive {
+protected:
     std::vector<Point3D> verts;
     std::vector<Face> faces;
 
