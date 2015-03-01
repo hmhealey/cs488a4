@@ -219,6 +219,11 @@ Vector3 Vector3::cross(const Vector3& other) const {
                    values[0] * other[1] - values[1] * other[0]);
 }
 
+Vector3 Vector3::reflect(const Vector3& normal) const {
+    // r = i - 2 * (i . n) * n
+    return *this - 2 * dot(normal) * normal;
+}
+
 ostream& operator <<(ostream& out, const Vector3& v) {
     return out << "v<" << v[0] << "," << v[1] << "," << v[2] << ">";
 }
@@ -681,6 +686,10 @@ Colour& Colour::operator=(const Colour& other) {
     components[2] = other.components[2];
 
     return *this;
+}
+
+Colour& Colour::operator+=(const Colour& other) {
+    return *this = *this + other;
 }
 
 double Colour::operator[](size_t i) const {

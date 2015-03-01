@@ -138,6 +138,9 @@ struct Vector3 {
     Vector3 normalized() const;
 
     Vector3 cross(const Vector3& other) const;
+
+    /** Returns the reflection vector that is produced by reflecting this one off a surface with the provided normal. **/
+    Vector3 reflect(const Vector3& normal) const;
 };
 
 std::ostream& operator<<(std::ostream& out, const Vector3& v);
@@ -358,6 +361,7 @@ struct Colour {
     Colour(const Colour& other);
 
     Colour& operator=(const Colour& other);
+    Colour& operator+=(const Colour& other);
 
     double operator[](size_t i) const;
     double& operator[](size_t i);
@@ -388,8 +392,16 @@ struct Colour {
 
 std::ostream& operator<<(std::ostream& out, const Colour& c);
 
-inline Colour operator*(double s, const Colour& a) {
-    return Colour(s * a.r(), s * a.g(), s * a.b());
+inline Colour operator*(double c, const Colour& a) {
+    return Colour(c * a.r(), c * a.g(), c * a.b());
+}
+
+inline Colour operator*(const Colour& a, double c) {
+    return c * a;
+}
+
+inline Colour operator/(const Colour& a, double c) {
+    return Colour(a.r() / c, a.g() / c, a.b() / c);
 }
 
 inline Colour operator*(const Colour& a, const Colour& b) {
