@@ -204,6 +204,8 @@ struct Matrix3 {
 
     Matrix3 transposed() const;
 
+    double determinant() const;
+
     const double* begin() const;
     const double* end() const;
 };

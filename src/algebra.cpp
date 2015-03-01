@@ -307,6 +307,11 @@ Matrix3 Matrix3::transposed() const {
     return Matrix3(getColumn(0), getColumn(1), getColumn(2));
 }
 
+double Matrix3::determinant() const {
+    return (values[0] * values[4] * values[8] + values[1] * values[5] * values[6] + values[2] * values[3] * values[7]) -
+           (values[2] * values[4] * values[6] + values[1] * values[3] * values[8] + values[0] * values[5] * values[7]);
+}
+
 const double* Matrix3::begin() const {
     return values;
 }
