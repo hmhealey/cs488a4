@@ -82,13 +82,22 @@ bool SceneNode::raycast(const Point3D& point, const Vector3& direction, Point3D&
 }
 
 bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
+    // convert the ray into our local coordinate system
+    bool intersected = false;
+
     for (auto i = children.cbegin(); i != children.cend(); i++) {
-        if ((*i)->raycast(point, direction, intersection)) {
-            return true;
+        Point3D childIntersection;
+
+        if ((*i)->raycast(point, direction, childIntersection)) {
+            if (!intersected || (childIntersection - point).length() < (intersection - point).length()) {
+                intersection = childIntersection;
+            }
+
+            intersected = true;
         }
     }
 
-    return false;
+    return intersected;
 }
 
 // --------------- GeometryNode ---------------
@@ -112,10 +121,31 @@ void GeometryNode::setMaterial(Material* material) {
 bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
     double t = primitive->getIntersection(point, direction);
 
+    Point3D childIntersection;
+    bool childIntersected = raycastChildren(point, direction, childIntersection);
+
     if (t >= 0 && t != numeric_limits<double>::infinity()) {
+        // ray intersected us
         intersection = point + t * direction;
+
+        if (childIntersected) {
+            // and children
+            if ((point - childIntersection).length() < (point - intersection).length()) {
+                // and it hit the child first
+                intersection = childIntersection;
+            }
+        }
+
         return true;
     } else {
-        return raycastChildren(point, direction, intersection);
+        // ray missed us
+        if (childIntersected) {
+            // but hit a child
+            intersection = childIntersection;
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
