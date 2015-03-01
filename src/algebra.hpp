@@ -178,6 +178,36 @@ inline Point3D operator-(const Point3D& a, const Vector3& b) {
     return Point3D(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 }
 
+struct Matrix3 {
+    static const Matrix3 Identity;
+
+    double values[9];
+
+    Matrix3();
+    Matrix3(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7, double v8);
+    Matrix3(const Matrix3& other);
+    Matrix3(const Vector3& row1, const Vector3& row2, const Vector3& row3);
+    Matrix3(const double* values);
+
+    Matrix3& operator=(const Matrix3& other);
+
+    bool operator==(const Matrix3& other) const;
+    bool operator!=(const Matrix3& other) const;
+
+    Vector3 getRow(size_t row) const;
+    double* getRow(size_t row);
+
+    Vector3 getColumn(size_t col) const;
+
+    Vector3 operator[](size_t row) const;
+    double* operator[](size_t row);
+
+    Matrix3 transposed() const;
+
+    const double* begin() const;
+    const double* end() const;
+};
+
 struct Vector4 {
     static const Vector4 Zero;
 
@@ -235,7 +265,7 @@ struct Matrix4 {
     Matrix4(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7,
             double v8, double v9, double v10, double v11, double v12, double v13, double v14, double v15);
     Matrix4(const Matrix4& other);
-    Matrix4(const Vector4 row1, const Vector4 row2, const Vector4 row3, const Vector4 row4);
+    Matrix4(const Vector4& row1, const Vector4& row2, const Vector4& row3, const Vector4& row4);
     Matrix4(const double* values);
 
     Matrix4& operator=(const Matrix4& other);

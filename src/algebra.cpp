@@ -223,6 +223,98 @@ ostream& operator <<(ostream& out, const Vector3& v) {
     return out << "v<" << v[0] << "," << v[1] << "," << v[2] << ">";
 }
 
+// --------------- Matrix3 ---------------
+
+const Matrix3 Matrix3::Identity = Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
+
+Matrix3::Matrix3() : Matrix3(Matrix3::Identity) { }
+
+Matrix3::Matrix3(double v0, double v1, double v2, double v3, double v4, double v5, double v6, double v7, double v8) {
+    values[0] = v0;
+    values[1] = v1;
+    values[2] = v2;
+    values[3] = v3;
+    values[4] = v4;
+    values[5] = v5;
+    values[6] = v6;
+    values[7] = v7;
+    values[8] = v8;
+}
+
+Matrix3::Matrix3(const Matrix3& other) {
+    copy(other.values, other.values + 9, values);
+}
+
+Matrix3::Matrix3(const Vector3& row1, const Vector3& row2, const Vector3& row3) {
+    values[0] = row1[0]; 
+    values[1] = row1[1]; 
+    values[2] = row1[2]; 
+
+    values[3] = row2[0]; 
+    values[4] = row2[1]; 
+    values[5] = row2[2]; 
+
+    values[6] = row3[0]; 
+    values[7] = row3[1]; 
+    values[8] = row3[2]; 
+}
+
+Matrix3::Matrix3(const double* values) {
+    copy(values, values + 9, this->values);
+}
+
+Matrix3& Matrix3::operator=(const Matrix3& other) {
+    copy(other.values, other.values + 9, values);
+
+    return *this;
+}
+
+bool Matrix3::operator==(const Matrix3& other) const {
+    for (size_t i = 0; i < 9; i++) {
+        if (values[i] != other.values[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Matrix3::operator!=(const Matrix3& other) const {
+    return !(*this == other);
+}
+
+Vector3 Matrix3::getRow(size_t row) const {
+    return Vector3(values[3 * row], values[3 * row + 1], values[3 * row + 2]);
+}
+
+double* Matrix3::getRow(size_t row) {
+    return values + 3 * row;
+}
+
+Vector3 Matrix3::getColumn(size_t col) const {
+    return Vector3(values[col], values[3 + col], values[6 + col]);
+}
+
+Vector3 Matrix3::operator[](size_t row) const {
+    return getRow(row);
+}
+
+double* Matrix3::operator[](size_t row) {
+    return getRow(row);
+}
+
+Matrix3 Matrix3::transposed() const {
+    return Matrix3(getColumn(0), getColumn(1), getColumn(2));
+}
+
+const double* Matrix3::begin() const {
+    return values;
+}
+
+const double* Matrix3::end() const {
+    return begin() + 9;
+}
+
 // --------------- Vector4 ---------------
 
 Vector4::Vector4() : Vector4(0, 0, 0, 0) { }
@@ -300,7 +392,7 @@ Matrix4::Matrix4(const Matrix4& other) {
     copy(other.values, other.values + 16, values);
 }
 
-Matrix4::Matrix4(const Vector4 row1, const Vector4 row2, const Vector4 row3, const Vector4 row4) {
+Matrix4::Matrix4(const Vector4& row1, const Vector4& row2, const Vector4& row3, const Vector4& row4) {
     values[0] = row1[0]; 
     values[1] = row1[1]; 
     values[2] = row1[2]; 
