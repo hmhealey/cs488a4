@@ -14,6 +14,8 @@ bool raycastSphere(const Point3D& center, double radius, const Point3D& point, c
 
     if (numRoots > 0) {
         hit.point = point + roots[0] * direction;
+        hit.normal = (hit.point - center).normalized();
+
         return true;
     } else {
         return false;
@@ -23,6 +25,7 @@ bool raycastSphere(const Point3D& center, double radius, const Point3D& point, c
 bool raycastBox(double left, double right, double bottom, double top, double front, double back,
                 const Point3D& point, const Vector3& direction, RaycastHit& hit) {
     double t = numeric_limits<double>::infinity();
+    Vector3 normal;
 
     // left plane
     {
@@ -30,7 +33,10 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.y() >= bottom && intersection.y() <= top && intersection.z() >= front && intersection.z() <= back) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(-1, 0, 0);
+            }
         }
     }
 
@@ -40,7 +46,10 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.y() >= bottom && intersection.y() <= top && intersection.z() >= front && intersection.z() <= back) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(1, 0, 0);
+            }
         }
     }
 
@@ -50,7 +59,10 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.z() >= front && intersection.z() <= back) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(0, -1, 0);
+            }
         }
     }
 
@@ -60,7 +72,10 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.z() >= front && intersection.z() <= back) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(0, 1, 0);
+            }
         }
     }
 
@@ -70,7 +85,10 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.y() >= bottom && intersection.y() <= top) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(0, 0, -1);
+            }
         }
     }
 
@@ -80,13 +98,18 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.y() >= bottom && intersection.y() <= top) {
-            t = min(t, tprime);
+            if (tprime < t) {
+                t = tprime;
+                normal = Vector3(0, 0, 1);
+            }
         }
     }
 
     if (t != numeric_limits<double>::infinity()) {
         // hit one of the planes
         hit.point = point + t * direction;
+        hit.normal = normal;
+
         return true;
     } else {
         // not hit occurred
@@ -130,7 +153,10 @@ bool raycastTriangle(const Point3D& p0, const Point3D& p1, const Point3D& p2, co
 
     if (beta >= 0 && gamma >= 0 && beta + gamma <= 1) {
         double t = d3 / d;
+
         hit.point = point + t * direction;
+        hit.normal = (p1 - p0).cross(p2 - p0).normalized();
+
         return true;
     } else {
         return false;
