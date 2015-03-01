@@ -14,7 +14,7 @@ bool raycastSphere(const Point3D& center, double radius, const Point3D& point, c
 
     if (numRoots > 0) {
         hit.point = point + roots[0] * direction;
-        hit.normal = (hit.point - center).normalized();
+        hit.normal = (center - hit.point).normalized();
 
         return true;
     } else {
