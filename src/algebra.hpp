@@ -135,7 +135,7 @@ struct Vector3 {
     double length() const;
 
     double normalize();
-    Vector3 normalized();
+    Vector3 normalized() const;
 
     Vector3 cross(const Vector3& other) const;
 };
@@ -181,7 +181,7 @@ inline Point3D operator-(const Point3D& a, const Vector3& b) {
 struct Vector4 {
     static const Vector4 Zero;
 
-    double values[];
+    double values[4];
 
     Vector4();
     Vector4(double x, double y, double z, double w);
@@ -223,6 +223,8 @@ struct Vector4 {
     bool operator==(const Vector4& other) const;
     bool operator!=(const Vector4& other) const;
 };
+
+std::ostream& operator<<(const std::ostream& out, const Vector4& v);
 
 struct Matrix4 {
     static const Matrix4 Identity;
@@ -271,13 +273,25 @@ std::ostream& operator<<(std::ostream& out, const Matrix4& m);
 inline Matrix4 operator*(const Matrix4& a, const Matrix4& b) {
     Matrix4 ret;
 
-    for(size_t i = 0; i < 4; ++i) {
-        Vector4 row = a.getRow(i);
-		
-        for(size_t j = 0; j < 4; ++j) {
-            ret[i][j] = row[0] * b[0][j] + row[1] * b[1][j] + row[2] * b[2][j] + row[3] * b[3][j];
-        }
-    }
+    ret.values[0] = a.values[0] * b.values[0] + a.values[1] * b.values[4] + a.values[2] * b.values[8] + a.values[3] * b.values[12];
+    ret.values[1] = a.values[0] * b.values[1] + a.values[1] * b.values[5] + a.values[2] * b.values[9] + a.values[3] * b.values[13];
+    ret.values[2] = a.values[0] * b.values[2] + a.values[1] * b.values[6] + a.values[2] * b.values[10] + a.values[3] * b.values[14];
+    ret.values[3] = a.values[0] * b.values[3] + a.values[1] * b.values[7] + a.values[2] * b.values[11] + a.values[3] * b.values[15];
+
+    ret.values[4] = a.values[4] * b.values[0] + a.values[5] * b.values[4] + a.values[6] * b.values[8] + a.values[7] * b.values[12];
+    ret.values[5] = a.values[4] * b.values[1] + a.values[5] * b.values[5] + a.values[6] * b.values[9] + a.values[7] * b.values[13];
+    ret.values[6] = a.values[4] * b.values[2] + a.values[5] * b.values[6] + a.values[6] * b.values[10] + a.values[7] * b.values[14];
+    ret.values[7] = a.values[4] * b.values[3] + a.values[5] * b.values[7] + a.values[6] * b.values[11] + a.values[7] * b.values[15];
+
+    ret.values[8] = a.values[8] * b.values[0] + a.values[9] * b.values[4] + a.values[10] * b.values[8] + a.values[11] * b.values[12];
+    ret.values[9] = a.values[8] * b.values[1] + a.values[9] * b.values[5] + a.values[10] * b.values[9] + a.values[11] * b.values[13];
+    ret.values[10] = a.values[8] * b.values[2] + a.values[9] * b.values[6] + a.values[10] * b.values[10] + a.values[11] * b.values[14];
+    ret.values[11] = a.values[8] * b.values[3] + a.values[9] * b.values[7] + a.values[10] * b.values[11] + a.values[11] * b.values[15];
+
+    ret.values[12] = a.values[12] * b.values[0] + a.values[13] * b.values[4] + a.values[14] * b.values[8] + a.values[15] * b.values[12];
+    ret.values[13] = a.values[12] * b.values[1] + a.values[13] * b.values[5] + a.values[14] * b.values[9] + a.values[15] * b.values[13];
+    ret.values[14] = a.values[12] * b.values[2] + a.values[13] * b.values[6] + a.values[14] * b.values[10] + a.values[15] * b.values[14];
+    ret.values[15] = a.values[12] * b.values[3] + a.values[13] * b.values[7] + a.values[14] * b.values[11] + a.values[15] * b.values[15];
 
     return ret;
 }

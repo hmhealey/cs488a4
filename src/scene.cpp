@@ -5,6 +5,7 @@
 #include "scene.hpp"
 
 #include <iostream>
+#include <limits>
 
 #include "algebra.hpp"
 #include "primitive.hpp"
@@ -76,13 +77,13 @@ void SceneNode::translate(const Vector3& amount) {
     transform = transform * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
-bool SceneNode::raycast(const Point3D& point, const Vector3& direction) const {
-    return raycastChildren(point, direction);
+bool SceneNode::raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
+    return raycastChildren(point, direction, intersection);
 }
 
-bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction) const {
+bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
     for (auto i = children.cbegin(); i != children.cend(); i++) {
-        if ((*i)->raycast(point, direction)) {
+        if ((*i)->raycast(point, direction, intersection)) {
             return true;
         }
     }
@@ -108,8 +109,13 @@ void GeometryNode::setMaterial(Material* material) {
     this->material = material;
 }
 
-bool GeometryNode::raycast(const Point3D& point, const Vector3& direction) const {
+bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const {
     double t = primitive->getIntersection(point, direction);
 
-    return (t >= 0 && t <= 1) || raycastChildren(point, direction);
+    if (t >= 0 && t != numeric_limits<double>::infinity()) {
+        intersection = point + t * direction;
+        return true;
+    } else {
+        return raycastChildren(point, direction, intersection);
+    }
 }

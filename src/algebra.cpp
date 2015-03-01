@@ -209,7 +209,7 @@ double Vector3::normalize() {
     }
 }
 
-Vector3 Vector3::normalized() {
+Vector3 Vector3::normalized() const {
     return *this / length();
 }
 
@@ -264,6 +264,10 @@ bool Vector4::operator==(const Vector4& other) const {
 
 bool Vector4::operator!=(const Vector4& other) const {
     return !(*this == other);
+}
+
+ostream& operator <<(ostream& out, const Vector4& v) {
+    return out << "v<" << v[0] << "," << v[1] << "," << v[2] << "," << v[3] << ">";
 }
 
 // --------------- Matrix4 ---------------

@@ -41,10 +41,10 @@ public:
     void scale(const Vector3& amount);
     void translate(const Vector3& amount);
 
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const;
 
 protected:
-    bool raycastChildren(const Point3D& point, const Vector3& direction) const;
+    bool raycastChildren(const Point3D& point, const Vector3& direction, Point3D& intersection) const;
 };
 
 class GeometryNode : public SceneNode {
@@ -59,7 +59,7 @@ public:
     Material* getMaterial();
     void setMaterial(Material* material);
 
-    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, Point3D& intersection) const;
 };
 
 #endif

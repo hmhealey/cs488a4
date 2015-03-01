@@ -1,5 +1,6 @@
 #include "primitive.hpp"
 
+#include <iostream>
 #include <limits>
 
 #include "polyroots.hpp"
@@ -18,7 +19,7 @@ double Sphere::getIntersection(const Point3D& point, const Vector3& direction) c
     Vector3 v = point - Point3D::Zero;
 
     double roots[2];
-    size_t numRoots = quadraticRoots(direction.dot(direction), direction.dot(v), v.dot(v), roots);
+    size_t numRoots = quadraticRoots(direction.dot(direction), 2 * direction.dot(v), v.dot(v) - 1, roots);
 
     if (numRoots > 0) {
         return roots[0];
@@ -48,7 +49,7 @@ double NonhierSphere::getIntersection(const Point3D& point, const Vector3& direc
     Vector3 v = point - center;
 
     double roots[2];
-    size_t numRoots = quadraticRoots(direction.dot(direction), direction.dot(v), v.dot(v), roots);
+    size_t numRoots = quadraticRoots(direction.dot(direction), 2 * direction.dot(v), v.dot(v) - radius * radius, roots);
 
     if (numRoots > 0) {
         return roots[0];
