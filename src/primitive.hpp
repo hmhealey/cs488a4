@@ -3,11 +3,14 @@
 
 #include "algebra.hpp"
 
+struct RaycastHit;
+
 class Primitive {
 public:
     virtual ~Primitive();
 
     virtual double getIntersection(const Point3D& point, const Vector3& direction) const = 0;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
 class Sphere : public Primitive {
@@ -15,6 +18,7 @@ public:
     virtual ~Sphere();
 
     virtual double getIntersection(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
 class Cube : public Primitive {
@@ -33,6 +37,7 @@ public:
     virtual ~NonhierSphere();
 
     virtual double getIntersection(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
 class NonhierBox : public Primitive {

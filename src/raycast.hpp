@@ -7,4 +7,6 @@ struct RaycastHit {
     Point3D point;
 };
 
+bool raycastSphere(const Point3D& center, double radius, const Point3D& point, const Vector3& direction, RaycastHit& hit);
+
 #endif

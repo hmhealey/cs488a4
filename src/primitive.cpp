@@ -4,12 +4,24 @@
 #include <limits>
 
 #include "polyroots.hpp"
+#include "raycast.hpp"
 
 using namespace std;
 
 // --------------- Primitive ---------------
 
 Primitive::~Primitive() { }
+
+bool Primitive::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    double t = getIntersection(point, direction);
+
+    if (t > 0 && t != numeric_limits<double>::infinity()) {
+        hit.point = point + t * direction;
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // --------------- Sphere ---------------
 
@@ -26,6 +38,10 @@ double Sphere::getIntersection(const Point3D& point, const Vector3& direction) c
     } else {
         return numeric_limits<double>::infinity();
     }
+}
+
+bool Sphere::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    return raycastSphere(Point3D::Zero, 0, point, direction, hit);
 }
 
 // --------------- Cube ---------------
@@ -105,6 +121,10 @@ double NonhierSphere::getIntersection(const Point3D& point, const Vector3& direc
     } else {
         return numeric_limits<double>::infinity();
     }
+}
+
+bool NonhierSphere::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    return raycastSphere(center, radius, point, direction, hit);
 }
 
 // --------------- NonhierBox ---------------

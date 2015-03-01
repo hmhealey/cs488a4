@@ -119,33 +119,27 @@ void GeometryNode::setMaterial(Material* material) {
 }
 
 bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
-    double t = primitive->getIntersection(point, direction);
+    bool intersected = primitive->raycast(point, direction, hit);
 
     RaycastHit childHit;
     bool childIntersected = raycastChildren(point, direction, childHit);
 
-    if (t >= 0 && t != numeric_limits<double>::infinity()) {
-        // ray intersected us
-        hit.point = point + t * direction;
-
-        if (childIntersected) {
-            // and children
-            if ((childHit.point - point).length() < (hit.point - point).length()) {
-                // and it hit the child first
-                hit = childHit;
-            }
+    if (intersected && childIntersected) {
+        // the ray hit both us and our children so pick the nearest intersection of the two
+        if ((childHit.point - point).length() < (hit.point - point).length()) {
+            hit = childHit;
         }
 
         return true;
+    } else if (intersected) {
+        // the ray hit us, but not our children
+        return true;
+    } else if (childIntersected) {
+        // the ray didn't hit us, but hit our child
+        hit = childHit;
+        return true;
     } else {
-        // ray missed us
-        if (childIntersected) {
-            // but hit a child
-            hit = childHit;
-
-            return true;
-        } else {
-            return false;
-        }
+        // the ray missed us and our children
+        return false;
     }
 }
