@@ -5,9 +5,7 @@
 #include "scene.hpp"
 
 #include <iostream>
-#include <limits>
 
-#include "algebra.hpp"
 #include "primitive.hpp"
 #include "raycast.hpp"
 
