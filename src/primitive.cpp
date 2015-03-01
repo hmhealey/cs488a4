@@ -104,6 +104,10 @@ double Cube::getIntersection(const Point3D& point, const Vector3& direction) con
     return ret;
 }
 
+bool Cube::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    return raycastBox(0, 1, 0, 1, 0, 1, point, direction, hit);
+}
+
 // --------------- NonhierSphere ---------------
 
 NonhierSphere::NonhierSphere(const Point3D& center, double radius) : center(center), radius(radius) { }
@@ -197,4 +201,8 @@ double NonhierBox::getIntersection(const Point3D& point, const Vector3& directio
     }
 
     return ret;
+}
+
+bool NonhierBox::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
+    return raycastBox(pos.x(), pos.x() + size, pos.y(), pos.y() + size, pos.z(), pos.z() + size, point, direction, hit);
 }

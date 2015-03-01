@@ -26,6 +26,7 @@ public:
     virtual ~Cube();
 
     virtual double getIntersection(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
 class NonhierSphere : public Primitive {
@@ -49,6 +50,7 @@ public:
     virtual ~NonhierBox();
 
     virtual double getIntersection(const Point3D& point, const Vector3& direction) const;
+    virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
 #endif
