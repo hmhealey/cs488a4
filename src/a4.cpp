@@ -18,14 +18,14 @@ void render(SceneNode* root, const string& filename, int width, int height,
     double d = 0.1;
 
     // size of the near plane
-    double h = 2 * d * tan(fov);
+    double h = 2 * d * tan(fov * M_PI / 360); // convert fov to radians and divide by 2
     double w = h * (width / height);
 
-    // change 0..1 coordinate space to -width/2..width/2
+    // change 0..width coordinate space to -width/2..width/2
     Matrix4 t1 = Matrix4::makeTranslation(-width / 2.0, -height / 2.0, d);
 
     // stretch screen to fit plane while maintaining aspect ratio
-    Matrix4 s2 = Matrix4::makeScaling(-h / height, w / width, 1);
+    Matrix4 s2 = Matrix4::makeScaling(-h / height, -w / width, 1); // not sure why i need to flip this as opposed to how we did it in class
 
     Vector3 wv = view.normalized();
     Vector3 uv = (up.cross(wv)).normalized();
