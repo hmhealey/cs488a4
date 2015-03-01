@@ -1,5 +1,6 @@
 #include "a4.hpp"
 
+#include <algorithm>
 #include <iostream>
 
 #include "algebra.hpp"
@@ -41,6 +42,9 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
     Matrix4 m = t4 * r3 * s2 * t1;
 
+    double dist[height][width];
+    double maxDist = -1;
+
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             Point3D pk(x, y, 0);
@@ -50,7 +54,19 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
             Colour colour;
             if (root->raycast(pw, (pw - eye).normalized(), intersection)) {
-                colour = Colour((intersection - eye).length() / 3000);
+                dist[y][x] = (intersection - eye).length();
+                maxDist = max(maxDist, dist[y][x]);
+            } else {
+                dist[y][x] = -1;
+            }
+        }
+    }
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            Colour colour;
+            if (dist[y][x] != -1) {
+                colour = Colour(dist[y][x] / maxDist);
             } else {
                 colour = getBackground(x, y, width, height);
             }
