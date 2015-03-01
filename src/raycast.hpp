@@ -12,9 +12,13 @@ struct RaycastHit {
 bool raycastSphere(const Point3D& center, double radius, const Point3D& point, const Vector3& direction, RaycastHit& hit);
 
 /** Casts a ray starting at point and heading in direction at an axis-aligned box made up of planes at x = left, x = right,
- *  y = bottom, y = top, z = front, and z = back. If the ray hits the box, hit is populated and true is returned. OTherwise,
+ *  y = bottom, y = top, z = front, and z = back. If the ray hits the box, hit is populated and true is returned. Otherwise,
  *  hit is unaffected and false is returned. **/
 bool raycastBox(double left, double right, double bottom, double top, double front, double back,
                 const Point3D& point, const Vector3& direction, RaycastHit& hit);
+
+/** Casts a ray starting at point and heading in direction at a triangle with corners p0, p1, and p2. If the ray hits the
+ *  triangle, hit is populated and true is returned. Otherwise, hit is unaffected and false is returned. **/
+bool raycastTriangle(const Point3D& p0, const Point3D& p1, const Point3D& p2, const Point3D& point, const Vector3& direction, RaycastHit& hit);
 
 #endif

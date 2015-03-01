@@ -93,3 +93,46 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         return false;
     }
 }
+
+bool raycastTriangle(const Point3D& p0, const Point3D& p1, const Point3D& p2, const Point3D& point, const Vector3& direction, RaycastHit& hit) {
+    double r1 = point.x() - p0.x();
+    double r2 = point.y() - p0.y();
+    double r3 = point.z() - p0.z();
+
+    double x1 = p1.x() - p0.x();
+    double x2 = p2.x() - p0.x();
+    double x3 = -direction.x();
+
+    double y1 = p1.y() - p0.y();
+    double y2 = p2.y() - p0.y();
+    double y3 = -direction.y();
+
+    double z1 = p1.z() - p0.z();
+    double z2 = p2.z() - p0.z();
+    double z3 = -direction.z();
+
+    // solve the system of equations using cramer's rule
+    double d = Matrix3(x1, x2, x3,
+                       y1, y2, y3,
+                       z1, z2, z3).determinant();
+    double d1 = Matrix3(r1, x2, x3,
+                        r2, y2, y3,
+                        r3, z2, z3).determinant();
+    double d2 = Matrix3(x1, r1, x3,
+                        y1, r2, y3,
+                        z1, r3, z3).determinant();
+    double d3 = Matrix3(x1, x2, r1,
+                        y1, y2, r2,
+                        z1, z2, r3).determinant();
+
+    double beta = d1 / d;
+    double gamma = d2 / d;
+
+    if (beta >= 0 && gamma >= 0 && beta + gamma <= 1) {
+        double t = d3 / d;
+        hit.point = point + t * direction;
+        return true;
+    } else {
+        return false;
+    }
+}

@@ -91,9 +91,8 @@ bool SceneNode::raycastChildren(const Point3D& point, const Vector3& direction, 
         if ((*i)->raycast(point, direction, childHit)) {
             if (!intersected || (childHit.point - point).length() < (hit.point - point).length()) {
                 hit = childHit;
+                intersected = true;
             }
-
-            intersected = true;
         }
     }
 
