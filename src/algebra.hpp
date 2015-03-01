@@ -240,6 +240,9 @@ struct Matrix4 {
 
     Matrix4& operator=(const Matrix4& other);
 
+    bool operator==(const Matrix4& other) const;
+    bool operator!=(const Matrix4& other) const;
+
     Vector4 getRow(size_t row) const;
     double* getRow(size_t row);
 

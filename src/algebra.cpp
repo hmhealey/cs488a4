@@ -332,6 +332,20 @@ Matrix4& Matrix4::operator=(const Matrix4& other) {
     return *this;
 }
 
+bool Matrix4::operator==(const Matrix4& other) const {
+    for (size_t i = 0; i < 16; i++) {
+        if (values[i] != other.values[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Matrix4::operator!=(const Matrix4& other) const {
+    return !(*this == other);
+}
+
 Vector4 Matrix4::getRow(size_t row) const {
     return Vector4(values[4 * row], values[4 * row + 1], values[4 * row + 2], values[4 * row + 3]);
 }
