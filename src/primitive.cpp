@@ -11,7 +11,7 @@ Primitive::~Primitive() { }
 Sphere::~Sphere() { }
 
 bool Sphere::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
-    return raycastSphere(Point3D::Zero, 0, point, direction, hit);
+    return raycastSphere(Point3D::Zero, 1, point, direction, hit);
 }
 
 // --------------- Cube ---------------
