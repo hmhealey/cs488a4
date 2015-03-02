@@ -83,6 +83,16 @@ void render(SceneNode* root, const string& filename, int width, int height,
                             Colour diffuse = attenuation * light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection));
 
                             colour += diffuse;
+
+                            // add specular lighting
+                            Vector3 reflection = lightDirection.reflect(hit.normal);
+
+                            Colour specular(0, 0, 0);
+                            if (hit.normal.dot(lightDirection) >= 0) {
+                                specular = attenuation * light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess);
+                            }
+
+                            colour += specular;
                         }
                     }
                 } else {
@@ -135,14 +145,18 @@ void render(SceneNode* root, const string& filename, int width, int height,
 }
 
 Colour getBackground(int x, int y, int width, int height) {
-    // red increasing from top to bottom
+    /*// red increasing from top to bottom
     double red = (double) y / height;
 
     // green increasing from left to right
     double green = (double) x / width;
 
     // blue in the lower left and upper right corners
-    double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;
+    double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;*/
+
+    double red = 0;
+    double green = 0;
+    double blue = (double) y / height;
 
     return Colour(red, green, blue);
 }
