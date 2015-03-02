@@ -3,12 +3,17 @@
 
 #include "algebra.hpp"
 
+struct Material;
+
 struct RaycastHit {
     // the point at which the ray hit a surface
     Point3D point;
 
     // the normal at that point in the surface   
     Vector3 normal;
+
+    // the material at that point on the surface
+    Material* material;
 };
 
 /** Casts a ray starting at point and heading in direction at a sphere centered at center and with radius radius. If the

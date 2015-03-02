@@ -118,6 +118,11 @@ void GeometryNode::setMaterial(Material* material) {
 bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
     bool intersected = primitive->raycast(point, direction, hit);
 
+    if (intersected) {
+        // the primitive doesn't know about the material so we add it on
+        hit.material = material;
+    }
+
     RaycastHit childHit;
     bool childIntersected = raycastChildren(point, direction, childHit);
 
@@ -130,6 +135,8 @@ bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Rayca
         return true;
     } else if (intersected) {
         // the ray hit us, but not our children
+        hit.material = material;
+
         return true;
     } else if (childIntersected) {
         // the ray didn't hit us, but hit our child

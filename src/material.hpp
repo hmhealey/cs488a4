@@ -3,24 +3,23 @@
 
 #include "algebra.hpp"
 
-class Material {
-public:
-    virtual ~Material();
-
+struct Material {
 protected:
     Material() { }
+
+public:
+    virtual ~Material();
 };
 
-class PhongMaterial : public Material {
-public:
-    PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
-    virtual ~PhongMaterial();
-
-private:
+struct PhongMaterial : public Material {
+    Colour ambient;
     Colour diffuse;
     Colour specular;
 
     double shininess;
+
+    PhongMaterial(const Colour& kd, const Colour& ks, double shininess);
+    virtual ~PhongMaterial();
 };
 
 
