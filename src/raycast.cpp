@@ -6,6 +6,11 @@
 
 using namespace std;
 
+void RaycastHit::transform(const Matrix4& transform) {
+    point = transform * point;
+    normal = transform * normal;
+}
+
 bool raycastSphere(const Point3D& center, double radius, const Point3D& point, const Vector3& direction, RaycastHit& hit) {
     Vector3 v = point - center;
 
