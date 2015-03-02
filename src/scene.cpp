@@ -25,6 +25,7 @@ Matrix4 SceneNode::getTransform() const {
 
 void SceneNode::setTransform(const Matrix4& transform) {
     this->transform = transform;
+    inverseTransform = transform.inverse();
 }
 
 void SceneNode::add_child(SceneNode* child) {
@@ -66,14 +67,18 @@ void SceneNode::rotate(char axis, double angle) {
         cerr << "SceneNode::rotate - " << axis << " isn't a valid axis" << endl;
         break;
     }
+
+    inverseTransform = transform.inverse();
 }
 
 void SceneNode::scale(const Vector3& amount) {
     transform = transform * Matrix4::makeScaling(amount[0], amount[1], amount[2]);
+    inverseTransform = transform.inverse();
 }
 
 void SceneNode::translate(const Vector3& amount) {
     transform = transform * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
+    inverseTransform = transform.inverse();
 }
 
 bool SceneNode::raycast(const Point3D& point, const Vector3& direction) const {
