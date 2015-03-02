@@ -15,12 +15,19 @@ bool drawDepth = false;
 bool useStochasticSampling = false;
 int numSubpixels = 1;
 
+int widthOverride = -1;
+int heightOverride = -1;
+
 void render(SceneNode* root, const string& filename, int width, int height, 
             const Point3D& eye, Vector3 view, Vector3 up, double fov, 
             const Colour& ambient, const list<Light*>& lights) {
     // make sure that view and up are normalized so they don't screw up our later calculations
     view = view.normalized();
     up = up.normalized();
+
+    // override width/height with commandline arguments
+    if (widthOverride != -1) width = widthOverride;
+    if (heightOverride != -1) height = heightOverride;
 
     Image image(width, height, 3);
 
@@ -179,6 +186,9 @@ Colour getBackground(double x, double y, int width, int height) {
 
     // blue in the lower left and upper right corners
     double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;*/
+
+    (void) x;
+    (void) width;
 
     double red = 0;
     double green = 0;
