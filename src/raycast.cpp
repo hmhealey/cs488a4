@@ -13,9 +13,20 @@ bool raycastSphere(const Point3D& center, double radius, const Point3D& point, c
     size_t numRoots = quadraticRoots(direction.dot(direction), 2 * direction.dot(v), v.dot(v) - radius * radius, roots);
 
     if (numRoots > 0) {
-        if (roots[0] >= 0) {
-            hit.point = point + roots[0] * direction;
-            hit.normal = (center - hit.point).normalized();
+        double t;
+        if (numRoots == 1) {
+            t = roots[0];
+        } else {
+            if (roots[0] >= 0 && roots[0] < roots[1]) {
+                t = roots[0];
+            } else {
+                t = roots[1];
+            }
+        }
+
+        if (t >= 0) {
+            hit.point = point + t * direction;
+            hit.normal = (hit.point - center).normalized();
 
             return true;
         } else {
