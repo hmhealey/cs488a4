@@ -76,6 +76,11 @@ void SceneNode::translate(const Vector3& amount) {
     transform = transform * Matrix4::makeTranslation(amount[0], amount[1], amount[2]);
 }
 
+bool SceneNode::raycast(const Point3D& point, const Vector3& direction) const {
+    RaycastHit hit;
+    return raycast(point, direction, hit);
+}
+
 bool SceneNode::raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const {
     return raycastChildren(point, direction, hit);
 }

@@ -42,6 +42,7 @@ public:
     void scale(const Vector3& amount);
     void translate(const Vector3& amount);
 
+    virtual bool raycast(const Point3D& point, const Vector3& direction) const;
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 
 protected:
