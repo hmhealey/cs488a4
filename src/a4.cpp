@@ -13,7 +13,7 @@ using namespace std;
 bool drawDepth = false;
 
 bool useStochasticSampling = false;
-double stochasticRange = 0.01;
+int numSubpixels = 1;
 
 void render(SceneNode* root, const string& filename, int width, int height, 
             const Point3D& eye, Vector3 view, Vector3 up, double fov, 
@@ -55,58 +55,81 @@ void render(SceneNode* root, const string& filename, int width, int height,
     if (!drawDepth) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < height; x++) {
-                Point3D pk(x, y, 0);
-                Point3D pw = m * pk;
+                Colour pixel(0, 0, 0);
 
-                Colour colour(0, 0, 0);
-
-                // cast a ray from our eye through the pixel on the screen and see what it hits
-                RaycastHit hit;
-                if (root->raycast(eye, (pw - eye).normalized(), hit)) {
-                    PhongMaterial* material = (PhongMaterial*) hit.material;
-
-                    // add ambient lighting
-                    colour += ambient * material->ambient;
-
-                    for (auto i = lights.cbegin(); i != lights.cend(); i++) {
-                        Light* light = *i;
-
-                        Vector3 surfaceToLight = light->position - hit.point;
-                        Vector3 lightDirection = surfaceToLight.normalized();
-
-                        // add a small epsilon to the reflected vector so that we don't immediately intersect with ourself
-                        const double epsilon = 0.0001;
-
-                        // only provide light from this light if there is nothing between the surface and the light
-                        if (!root->raycast(hit.point + epsilon * lightDirection, lightDirection)) {
-                            double distance = surfaceToLight.length();
-                            // this is technically 1 / attenuation, but we'll just divide by it later on
-                            double attenuation = light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2];
-
-                            // add diffuse lighting
-                            Colour diffuse = light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection)) / attenuation;
-
-                            colour += diffuse;
-
-                            // add specular lighting
-                            Vector3 reflection = lightDirection.reflect(hit.normal);
-
-                            Colour specular(0, 0, 0);
-                            if (hit.normal.dot(lightDirection) >= 0) {
-                                specular = light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess) / attenuation;
+                for (int i = 0; i < numSubpixels; i++) {
+                    for (int j = 0; j < numSubpixels; j++) {
+                        // coordinates of subpixel
+                        double sx;
+                        double sy;
+                        if (useStochasticSampling) {
+                            sx = x + (j + (double) rand() / RAND_MAX) / numSubpixels;
+                            sy = y + (i + (double) rand() / RAND_MAX) / numSubpixels;
+                            if (x == 4 && y == 4) {
+                                cerr << "subpixel at 4,4 offset from (" << x + (j + 0.5) / numSubpixels << ", " << y + (i + 0.5) / numSubpixels << ") to (" << sx << ", " << sy << ")" << endl;
                             }
-
-                            colour += specular;
+                        } else {
+                            sx = x + (j + 0.5) / numSubpixels;
+                            sy = y + (i + 0.5) / numSubpixels;
                         }
+
+                        Point3D pk(sx, sy, 0);
+
+                        Point3D pw = m * pk;
+
+                        Colour colour(0, 0, 0);
+
+                        // cast a ray from our eye through the pixel on the screen and see what it hits
+                        RaycastHit hit;
+                        if (root->raycast(eye, (pw - eye).normalized(), hit)) {
+                            PhongMaterial* material = (PhongMaterial*) hit.material;
+
+                            // add ambient lighting
+                            colour += ambient * material->ambient;
+
+                            for (auto i = lights.cbegin(); i != lights.cend(); i++) {
+                                Light* light = *i;
+
+                                Vector3 surfaceToLight = light->position - hit.point;
+                                Vector3 lightDirection = surfaceToLight.normalized();
+
+                                // add a small epsilon to the reflected vector so that we don't immediately intersect with ourself
+                                const double epsilon = 0.0001;
+
+                                // only provide light from this light if there is nothing between the surface and the light
+                                if (!root->raycast(hit.point + epsilon * lightDirection, lightDirection)) {
+                                    double distance = surfaceToLight.length();
+                                    // this is technically 1 / attenuation, but we'll just divide by it later on
+                                    double attenuation = light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2];
+
+                                    // add diffuse lighting
+                                    Colour diffuse = light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection)) / attenuation;
+
+                                    colour += diffuse;
+
+                                    // add specular lighting
+                                    Vector3 reflection = lightDirection.reflect(hit.normal);
+
+                                    Colour specular(0, 0, 0);
+                                    if (hit.normal.dot(lightDirection) >= 0) {
+                                        specular = light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess) / attenuation;
+                                    }
+
+                                    colour += specular;
+                                }
+                            }
+                        } else {
+                            // it didn't hit anything so just use the background colour
+                            colour = getBackground(sx, sy, width, height);
+                        }
+
+                        pixel += colour / (numSubpixels * numSubpixels);
                     }
-                } else {
-                    // it didn't hit anything so just use the background colour
-                    colour = getBackground(x, y, width, height);
                 }
 
-                image(x, y, 0) = colour.r();
-                image(x, y, 1) = colour.g();
-                image(x, y, 2) = colour.b();
+                image(x, y, 0) = pixel.r();
+                image(x, y, 1) = pixel.g();
+                image(x, y, 2) = pixel.b();
             }
         }
     } else {
@@ -148,19 +171,19 @@ void render(SceneNode* root, const string& filename, int width, int height,
     image.savePng(filename);
 }
 
-Colour getBackground(int x, int y, int width, int height) {
+Colour getBackground(double x, double y, int width, int height) {
     /*// red increasing from top to bottom
-    double red = (double) y / height;
+    double red = y / height;
 
     // green increasing from left to right
-    double green = (double) x / width;
+    double green = x / width;
 
     // blue in the lower left and upper right corners
     double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;*/
 
     double red = 0;
     double green = 0;
-    double blue = (double) y / height;
+    double blue = y / height;
 
     return Colour(red, green, blue);
 }

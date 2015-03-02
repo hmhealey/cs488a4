@@ -11,6 +11,6 @@ void render(SceneNode* root, const std::string& filename, int width, int height,
             const Point3D& eye, Vector3 view, Vector3 up, double fov,
             const Colour& ambient, const std::list<Light*>& lights);
 
-Colour getBackground(int x, int y, int width, int height);
+Colour getBackground(double x, double y, int width, int height);
 
 #endif
