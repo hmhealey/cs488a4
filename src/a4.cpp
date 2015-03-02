@@ -1,7 +1,6 @@
 #include "a4.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <iostream>
 
 #include "algebra.hpp"
@@ -28,8 +27,8 @@ void render(SceneNode* root, const string& filename, int width, int height,
     // change 0..width coordinate space to -width/2..width/2
     Matrix4 t1 = Matrix4::makeTranslation(-width / 2.0, -height / 2.0, d);
 
-    // stretch screen to fit plane while maintaining aspect ratio
-    Matrix4 s2 = Matrix4::makeScaling(-h / height, -w / width, 1); // not sure why i need to flip this as opposed to how we did it in class
+    // stretch screen to fit plane while maintaining aspect ratio and flip to fix signs
+    Matrix4 s2 = Matrix4::makeScaling(-h / height, -w / width, 1);
 
     Vector3 wv = view.normalized();
     Vector3 uv = (up.cross(wv)).normalized();
@@ -55,7 +54,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
                 Colour colour;
 
                 RaycastHit hit;
-                if (root->raycast(pw, (pw - eye).normalized(), hit)) {
+                if (root->raycast(eye, (pw - eye).normalized(), hit)) {
                     PhongMaterial* material = (PhongMaterial*) hit.material;
 
                     // ambient light
@@ -102,7 +101,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
                 Point3D pw = m * pk;
 
                 RaycastHit hit;
-                if (root->raycast(pw, (pw - eye).normalized(), hit)) {
+                if (root->raycast(eye, (pw - eye).normalized(), hit)) {
                     dist[y][x] = (hit.point - eye).length();
                     maxDist = max(maxDist, dist[y][x]);
                     if (hit.normal == Vector3::Zero) cerr << "zero normal!" << endl;
