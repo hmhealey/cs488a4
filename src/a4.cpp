@@ -10,7 +10,10 @@
 
 using namespace std;
 
-const bool DRAW_DEPTH = false;
+bool drawDepth = false;
+
+bool useStochasticSampling = false;
+double stochasticRange = 0.01;
 
 void render(SceneNode* root, const string& filename, int width, int height, 
             const Point3D& eye, Vector3 view, Vector3 up, double fov, 
@@ -49,7 +52,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
     Matrix4 m = t4 * r3 * s2 * t1;
 
-    if (!DRAW_DEPTH) {
+    if (!drawDepth) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < height; x++) {
                 Point3D pk(x, y, 0);
