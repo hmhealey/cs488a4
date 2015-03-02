@@ -13,8 +13,12 @@ using namespace std;
 const bool DRAW_DEPTH = false;
 
 void render(SceneNode* root, const string& filename, int width, int height, 
-            const Point3D& eye, const Vector3& view, const Vector3& up, double fov, 
+            const Point3D& eye, Vector3 view, Vector3 up, double fov, 
             const Colour& ambient, const list<Light*>& lights) {
+    // make sure that view and up are normalized so they don't screw up our later calculations
+    view = view.normalized();
+    up = up.normalized();
+
     Image image(width, height, 3);
 
     // depth of near plane
@@ -51,14 +55,12 @@ void render(SceneNode* root, const string& filename, int width, int height,
                 Point3D pk(x, y, 0);
                 Point3D pw = m * pk;
 
-                Colour colour;
+                Colour colour(0, 0, 0);
 
+                // cast a ray from our eye through the pixel on the screen and see what it hits
                 RaycastHit hit;
                 if (root->raycast(eye, (pw - eye).normalized(), hit)) {
                     PhongMaterial* material = (PhongMaterial*) hit.material;
-
-                    // ambient light
-                    colour = material->ambient * ambient;
 
                     for (auto i = lights.cbegin(); i != lights.cend(); i++) {
                         Light* light = *i;
@@ -66,23 +68,21 @@ void render(SceneNode* root, const string& filename, int width, int height,
                         Vector3 surfaceToLight = light->position - hit.point;
                         Vector3 lightDirection = surfaceToLight.normalized();
 
-                        // calculate attenuation (well 1 / attenuation so we can later divide by it)
-                        double distance = surfaceToLight.length();
-                        double attenuation = light->falloff[0] + light->falloff[1] * distance + light->falloff[2] * distance * distance;
+                        // add a small epsilon to the reflected vector so that we don't immediately intersect with ourself
+                        const double epsilon = 0.0001;
 
-                        // diffuse
-                        Colour diffuse = light->colour * material->diffuse * max(hit.normal.dot(lightDirection), 0.0) / attenuation;
+                        // only provide light from this light if there is nothing between the surface and the light
+                        if (!root->raycast(hit.point + epsilon * lightDirection, lightDirection)) {
+                            double distance = surfaceToLight.length();
+                            double attenuation = 1 / (light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2]);
 
-                        // specular
-                        Colour specular(0, 0, 0);
-                        if (hit.normal.dot(lightDirection) >= 0.0) {
-                            Vector3 r = -lightDirection.reflect(hit.normal);
-                            specular = light->colour * material->specular * pow(max(r.dot(view), 0.0), material->shininess) / attenuation;
+                            Colour diffuse = attenuation * light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection));
+
+                            colour += diffuse;
                         }
-
-                        colour += diffuse + specular;
                     }
                 } else {
+                    // it didn't hit anything so just use the background colour
                     colour = getBackground(x, y, width, height);
                 }
 
