@@ -36,7 +36,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
     // size of the near plane
     double h = 2 * d * tan(fov * M_PI / 360); // convert fov to radians and divide by 2
-    double w = h * (width / height);
+    double w = h * width / height;
 
     // change 0..width coordinate space to -width/2..width/2
     Matrix4 t1 = Matrix4::makeTranslation(-width / 2.0, -height / 2.0, d);
@@ -61,7 +61,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
     if (!drawDepth) {
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < height; x++) {
+            for (int x = 0; x < width; x++) {
                 Colour pixel(0, 0, 0);
 
                 for (int i = 0; i < numSubpixels; i++) {
