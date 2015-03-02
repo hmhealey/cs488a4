@@ -63,12 +63,11 @@ void render(SceneNode* root, const string& filename, int width, int height,
                         double sx;
                         double sy;
                         if (useStochasticSampling) {
+                            // draw ray through somewhere in the subpixel
                             sx = x + (j + (double) rand() / RAND_MAX) / numSubpixels;
                             sy = y + (i + (double) rand() / RAND_MAX) / numSubpixels;
-                            if (x == 4 && y == 4) {
-                                cerr << "subpixel at 4,4 offset from (" << x + (j + 0.5) / numSubpixels << ", " << y + (i + 0.5) / numSubpixels << ") to (" << sx << ", " << sy << ")" << endl;
-                            }
                         } else {
+                            // draw ray through the center of the subpixel
                             sx = x + (j + 0.5) / numSubpixels;
                             sy = y + (i + 0.5) / numSubpixels;
                         }
