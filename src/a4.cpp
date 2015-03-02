@@ -62,6 +62,9 @@ void render(SceneNode* root, const string& filename, int width, int height,
                 if (root->raycast(eye, (pw - eye).normalized(), hit)) {
                     PhongMaterial* material = (PhongMaterial*) hit.material;
 
+                    // add ambient lighting
+                    colour += ambient * material->ambient;
+
                     for (auto i = lights.cbegin(); i != lights.cend(); i++) {
                         Light* light = *i;
 
@@ -76,6 +79,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
                             double distance = surfaceToLight.length();
                             double attenuation = 1 / (light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2]);
 
+                            // add diffuse lighting
                             Colour diffuse = attenuation * light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection));
 
                             colour += diffuse;
