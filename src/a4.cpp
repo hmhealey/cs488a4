@@ -18,22 +18,9 @@ int numSubpixels = 1;
 int widthOverride = -1;
 int heightOverride = -1;
 
-void render(SceneNode* root, const string& filename, int width, int height, 
-            const Point3D& eye, Vector3 view, Vector3 up, double fov, 
-            const Colour& ambient, const list<Light*>& lights) {
-    // make sure that view and up are normalized so they don't screw up our later calculations
-    view = view.normalized();
-    up = up.normalized();
+const static double d = 0.1;
 
-    // override width/height with commandline arguments
-    if (widthOverride != -1) width = widthOverride;
-    if (heightOverride != -1) height = heightOverride;
-
-    Image image(width, height, 3);
-
-    // depth of near plane
-    double d = 0.1;
-
+static Matrix4 constructCameraToWorldMatrix(int width, int height, const Point3D& eye, const Vector3& view, const Vector3& up, double fov) {
     // size of the near plane
     double h = 2 * d * tan(fov * M_PI / 360); // convert fov to radians and divide by 2
     double w = h * width / height;
@@ -57,7 +44,23 @@ void render(SceneNode* root, const string& filename, int width, int height,
     // move to eye point
     Matrix4 t4 = Matrix4::makeTranslation(eye.x(), eye.y(), eye.z());
 
-    Matrix4 m = t4 * r3 * s2 * t1;
+    return t4 * r3 * s2 * t1;
+}
+
+void render(SceneNode* root, const string& filename, int width, int height,
+            const Point3D& eye, Vector3 view, Vector3 up, double fov,
+            const Colour& ambient, const list<Light*>& lights) {
+    // make sure that view and up are normalized so they don't screw up our later calculations
+    view = view.normalized();
+    up = up.normalized();
+
+    // override width/height with commandline arguments
+    if (widthOverride != -1) width = widthOverride;
+    if (heightOverride != -1) height = heightOverride;
+
+    Image image(width, height, 3);
+
+    Matrix4 m = constructCameraToWorldMatrix(width, height, eye, view, up, fov);
 
     if (!drawDepth) {
         for (int y = 0; y < height; y++) {
