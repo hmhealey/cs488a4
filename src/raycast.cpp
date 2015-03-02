@@ -13,10 +13,14 @@ bool raycastSphere(const Point3D& center, double radius, const Point3D& point, c
     size_t numRoots = quadraticRoots(direction.dot(direction), 2 * direction.dot(v), v.dot(v) - radius * radius, roots);
 
     if (numRoots > 0) {
-        hit.point = point + roots[0] * direction;
-        hit.normal = (center - hit.point).normalized();
+        if (roots[0] >= 0) {
+            hit.point = point + roots[0] * direction;
+            hit.normal = (center - hit.point).normalized();
 
-        return true;
+            return true;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }
@@ -33,7 +37,7 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.y() >= bottom && intersection.y() <= top && intersection.z() >= front && intersection.z() <= back) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(-1, 0, 0);
             }
@@ -46,7 +50,7 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.y() >= bottom && intersection.y() <= top && intersection.z() >= front && intersection.z() <= back) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(1, 0, 0);
             }
@@ -59,7 +63,7 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.z() >= front && intersection.z() <= back) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(0, -1, 0);
             }
@@ -72,7 +76,7 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.z() >= front && intersection.z() <= back) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(0, 1, 0);
             }
@@ -85,7 +89,7 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.y() >= bottom && intersection.y() <= top) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(0, 0, -1);
             }
@@ -98,14 +102,14 @@ bool raycastBox(double left, double right, double bottom, double top, double fro
         Point3D intersection = point + tprime * direction;
 
         if (intersection.x() >= left && intersection.x() <= right && intersection.y() >= bottom && intersection.y() <= top) {
-            if (tprime < t) {
+            if (tprime >= 0 && tprime < t) {
                 t = tprime;
                 normal = Vector3(0, 0, 1);
             }
         }
     }
 
-    if (t != numeric_limits<double>::infinity()) {
+    if (t >= 0 && t != numeric_limits<double>::infinity()) {
         // hit one of the planes
         hit.point = point + t * direction;
         hit.normal = normal;
@@ -154,10 +158,14 @@ bool raycastTriangle(const Point3D& p0, const Point3D& p1, const Point3D& p2, co
     if (beta >= 0 && gamma >= 0 && beta + gamma <= 1) {
         double t = d3 / d;
 
-        hit.point = point + t * direction;
-        hit.normal = (p1 - p0).cross(p2 - p0).normalized();
+        if (t >= 0) {
+            hit.point = point + t * direction;
+            hit.normal = (p1 - p0).cross(p2 - p0).normalized();
 
-        return true;
+            return true;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }
