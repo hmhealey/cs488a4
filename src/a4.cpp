@@ -77,10 +77,11 @@ void render(SceneNode* root, const string& filename, int width, int height,
                         // only provide light from this light if there is nothing between the surface and the light
                         if (!root->raycast(hit.point + epsilon * lightDirection, lightDirection)) {
                             double distance = surfaceToLight.length();
-                            double attenuation = 1 / (light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2]);
+                            // this is technically 1 / attenuation, but we'll just divide by it later on
+                            double attenuation = light->falloff[0] + distance * light->falloff[1] + distance * distance * light->falloff[2];
 
                             // add diffuse lighting
-                            Colour diffuse = attenuation * light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection));
+                            Colour diffuse = light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection)) / attenuation;
 
                             colour += diffuse;
 
@@ -89,7 +90,7 @@ void render(SceneNode* root, const string& filename, int width, int height,
 
                             Colour specular(0, 0, 0);
                             if (hit.normal.dot(lightDirection) >= 0) {
-                                specular = attenuation * light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess);
+                                specular = light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess) / attenuation;
                             }
 
                             colour += specular;
