@@ -16,6 +16,9 @@ struct RaycastHit {
 
     // the material at that point on the surface
     Material* material;
+
+    // transforms the properties of this hit (eg point, normal) by the provided matrix
+    void transform(const Matrix4& transform, const Matrix4& inverse);
 };
 
 /** Casts a ray starting at point and heading in direction at a sphere centered at center and with radius radius. If the

@@ -7,6 +7,14 @@
 
 using namespace std;
 
+void RaycastHit::transform(const Matrix4& transform, const Matrix4& inverse) {
+    // transforming the point is as expected
+    point = transform * point;
+
+    // transforming the normal involves using the transpose of transform
+    normal = (inverse.transposed() * normal).normalized();
+}
+
 bool raycastSphere(const Point3D& center, double radius, const Point3D& point, const Vector3& direction, RaycastHit& hit) {
     Vector3 v = point - center;
 

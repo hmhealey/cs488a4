@@ -23,6 +23,7 @@ protected:
     std::list<SceneNode*> children;
 
     Matrix4 transform;
+    Matrix4 inverseTransform;
 
 public:
     SceneNode(const std::string& name);
