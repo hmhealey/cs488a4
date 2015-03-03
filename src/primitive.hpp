@@ -3,49 +3,57 @@
 
 #include "algebra.hpp"
 
+#include <vector>
+
 struct RaycastHit;
 
-class Primitive {
-public:
+struct Primitive {
     virtual ~Primitive();
 
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const = 0;
+
+    const virtual Primitive* getBounds() const;
 };
 
-class Sphere : public Primitive {
-public:
+struct Sphere : public Primitive {
     virtual ~Sphere();
 
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
-class Cube : public Primitive {
-public:
+struct Cube : public Primitive {
     virtual ~Cube();
 
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
 };
 
-class NonhierSphere : public Primitive {
-    Point3D center;
-    double radius;
+struct NonhierSphere : public Primitive {
+    const Point3D center;
+    const double radius;
 
-public:
     NonhierSphere(const Point3D& center, double radius);
     virtual ~NonhierSphere();
 
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
+
+    static NonhierSphere *makeBoundingSphere(const std::vector<Point3D>& points);
 };
 
-class NonhierBox : public Primitive {
-    Point3D pos;
-    double size;    
+struct NonhierBox : public Primitive {
+    const double left;
+    const double right;
+    const double bottom;
+    const double top;
+    const double front;
+    const double back;
 
-public:
     NonhierBox(const Point3D& pos, double size);
+    NonhierBox(double left, double right, double bottom, double top, double front, double back);
     virtual ~NonhierBox();
 
     virtual bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
+
+    static NonhierBox *makeBoundingBox(const std::vector<Point3D>& points);
 };
 
 #endif

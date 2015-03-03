@@ -12,7 +12,7 @@
 #include "material.hpp"
 
 class JointNode;
-class Primitive;
+struct Primitive;
 struct RaycastHit;
 class Shader;
 

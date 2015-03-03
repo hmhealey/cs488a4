@@ -17,10 +17,15 @@ protected:
     std::vector<Point3D> verts;
     std::vector<Face> faces;
 
+    mutable Primitive* bounds = NULL;
+
 public:
     Mesh(const std::vector<Point3D>& verts, const std::vector<Face>& faces);
+    virtual ~Mesh();
 
     bool raycast(const Point3D& point, const Vector3& direction, RaycastHit& hit) const;
+
+    virtual const Primitive* getBounds() const;
 
     friend std::ostream& operator<<(std::ostream& out, const Mesh& mesh);
 };
