@@ -13,6 +13,9 @@ extern int numSubpixels;
 extern int widthOverride;
 extern int heightOverride;
 
+extern bool useBoundingSpheres;
+extern bool drawBounds;
+
 int main(int argc, char** argv) {
     string filename = "scene.lua";
 
@@ -50,6 +53,21 @@ int main(int argc, char** argv) {
                 i += 1;
             } else {
                 cerr << "Expected height after -h" << endl;
+            }
+        } else if (strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "-db") == 0) {
+            if (strcmp(argv[i], "-db") == 0) {
+                drawBounds = true;
+            }
+
+            if (i < argc - 1) {
+                if (strcmp(argv[i + 1], "sphere") == 0) {
+                    useBoundingSpheres = true;
+                    i += 1;
+                } else if (strcmp(argv[i + 1], "box") == 0) {
+                    // this is the default currently, but in case it's ever not, still set this
+                    useBoundingSpheres = false;
+                    i += 1;
+                }
             }
         } else {
             filename = argv[i];
