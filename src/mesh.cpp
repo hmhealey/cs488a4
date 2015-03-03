@@ -13,13 +13,11 @@ bool Mesh::raycast(const Point3D& point, const Vector3& direction, RaycastHit& h
     bool intersected = false;
 
     for (auto i = faces.cbegin(); i != faces.cend(); i++) {
-        // points that make up the face
-        const Point3D& p0 = verts[(*i)[0]];
-        const Point3D& p1 = verts[(*i)[1]];
-        const Point3D& p2 = verts[(*i)[2]];
+        // faces are assumed to be planar, convex, and can have any number of vertices
+        const Face& face = *i;
 
         RaycastHit faceHit;
-        if (raycastTriangle(p0, p1, p2, point, direction, faceHit)) {
+        if (raycastPolygon(face, verts, point, direction, faceHit)) {
             if (!intersected || (faceHit.point - point).length() < (hit.point - point).length()) {
                 hit = faceHit;
                 intersected = true;
