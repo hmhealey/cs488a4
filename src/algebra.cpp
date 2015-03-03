@@ -538,6 +538,12 @@ Matrix4 Matrix4::inverse() const {
     return ret;
 }
 
+Matrix3 Matrix4::upper3x3() const {
+    return Matrix3(values[0], values[1], values[2],
+                   values[4], values[5], values[6],
+                   values[8], values[9], values[10]);
+}
+
 const double* Matrix4::begin() const {
     return values;
 }

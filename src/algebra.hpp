@@ -213,6 +213,30 @@ struct Matrix3 {
     const double* end() const;
 };
 
+inline Matrix3 operator*(const Matrix3& a, const Matrix3& b) {
+    Matrix3 ret;
+
+    ret.values[0] = a.values[0] * b.values[0] + a.values[1] * b.values[3] + a.values[2] + b.values[6];
+    ret.values[1] = a.values[0] * b.values[1] + a.values[1] * b.values[4] + a.values[2] + b.values[7];
+    ret.values[2] = a.values[0] * b.values[2] + a.values[1] * b.values[5] + a.values[2] + b.values[8];
+
+    ret.values[3] = a.values[3] * b.values[0] + a.values[4] * b.values[3] + a.values[5] + b.values[6];
+    ret.values[4] = a.values[3] * b.values[1] + a.values[4] * b.values[4] + a.values[5] + b.values[7];
+    ret.values[5] = a.values[3] * b.values[2] + a.values[4] * b.values[5] + a.values[5] + b.values[8];
+
+    ret.values[6] = a.values[6] * b.values[0] + a.values[7] * b.values[3] + a.values[8] + b.values[6];
+    ret.values[7] = a.values[6] * b.values[1] + a.values[7] * b.values[4] + a.values[8] + b.values[7];
+    ret.values[8] = a.values[6] * b.values[2] + a.values[7] * b.values[5] + a.values[8] + b.values[8];
+
+    return ret;
+}
+
+inline Vector3 operator*(const Matrix3& m, const Vector3& v) {
+    return Vector3(v[0] * m[0][0] + v[1] * m[0][1] + v[2] * m[0][2],
+                   v[0] * m[1][0] + v[1] * m[1][1] + v[2] * m[1][2],
+                   v[0] * m[2][0] + v[1] * m[2][1] + v[2] * m[2][2]);
+}
+
 struct Vector4 {
     static const Vector4 Zero;
 
@@ -288,6 +312,8 @@ struct Matrix4 {
 
     Matrix4 transposed() const;
     Matrix4 inverse() const;
+
+    Matrix3 upper3x3() const;
 
     const double* begin() const;
     const double* end() const;
