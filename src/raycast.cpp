@@ -1,5 +1,6 @@
 #include "raycast.hpp"
 
+#include <iostream>
 #include <limits>
 
 #include "polyroots.hpp"
@@ -185,4 +186,30 @@ bool raycastTriangle(const Point3D& p0, const Point3D& p1, const Point3D& p2, co
     } else {
         return false;
     }
+}
+
+bool raycastPolygon(const vector<Point3D>& points, const Point3D& point, const Vector3& direction, RaycastHit& hit) {
+    vector<int> face;
+
+    for (size_t i = 0; i < points.size(); i++) {
+        face.push_back((int) i);
+    }
+
+    return raycastPolygon(face, points, point, direction, hit);
+}
+
+bool raycastPolygon(const vector<int>& face, const vector<Point3D>& points, const Point3D& point, const Vector3& direction, RaycastHit& hit) {
+    if (face.size() < 3) {
+        cerr << "raycastPolygon - Unable to raycast against a polygon with < 3 points." << endl;
+        return false;
+    }
+
+    for (size_t i = 1; i < face.size(); i++) {
+        // we assume that faces are convex and planar so we can just break them into triangle fans
+        if (raycastTriangle(points[face[0]], points[face[i]], points[face[(i + 1) % face.size()]], point, direction, hit)) {
+            return true;
+        }
+    }
+
+    return false;
 }
