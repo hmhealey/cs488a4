@@ -90,7 +90,7 @@ bool SceneNode::raycast(const Point3D& point, const Vector3& direction, RaycastH
     bool hitChild = raycastChildren(inverseTransform * point, inverseTransform * direction, hit);
 
     // transform back to world coordinates before we return
-    if (hitChild) hit.transform(transform);
+    if (hitChild) hit.transform(transform, inverseTransform);
 
     return hitChild;
 }
@@ -155,7 +155,7 @@ bool GeometryNode::raycast(const Point3D& point, const Vector3& direction, Rayca
             hit = childHit;
         }
 
-        hit.transform(transform);
+        hit.transform(transform, inverseTransform);
 
         return true;
     } else {
