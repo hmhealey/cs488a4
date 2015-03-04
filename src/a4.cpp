@@ -67,6 +67,8 @@ void render(SceneNode* root, const string& filename, int width, int height,
     Matrix4 m = constructCameraToWorldMatrix(width, height, eye, view, up, fov);
 
     if (!drawDepth) {
+        int progressStep = width * height / 20;
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Colour pixel(0, 0, 0);
@@ -149,6 +151,8 @@ void render(SceneNode* root, const string& filename, int width, int height,
                 image(x, y, 0) = pixel.r();
                 image(x, y, 1) = pixel.g();
                 image(x, y, 2) = pixel.b();
+
+                if ((y * width + x) % progressStep == 0) cerr << round((double) (y * width + x) / (double) (width * height) * 100.0) << "% complete!" << endl;
             }
         }
     } else {
