@@ -191,21 +191,14 @@ void render(SceneNode* root, const string& filename, int width, int height,
 }
 
 Colour getBackground(double x, double y, int width, int height) {
-    /*// red increasing from top to bottom
+    // red increasing from top to bottom
     double red = y / height;
 
     // green increasing from left to right
     double green = x / width;
 
     // blue in the lower left and upper right corners
-    double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;*/
-
-    (void) x;
-    (void) width;
-
-    double red = 0;
-    double green = 0;
-    double blue = y / height;
+    double blue = ((y < height / 2 && x < width / 2) || (y >= height / 2 && x >= width / 2)) ? 1.0 : 0.0;
 
     return Colour(red, green, blue);
 }
