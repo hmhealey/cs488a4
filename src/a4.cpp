@@ -18,6 +18,10 @@ int numSubpixels = 1;
 int widthOverride = -1;
 int heightOverride = -1;
 
+bool enableAmbientLighting = true;
+bool enableDiffuseLighting = true;
+bool enableSpecularLighting = true;
+
 const static double d = 0.1;
 
 static Matrix4 constructCameraToWorldMatrix(int width, int height, const Point3D& eye, const Vector3& view, const Vector3& up, double fov) {
@@ -94,7 +98,9 @@ void render(SceneNode* root, const string& filename, int width, int height,
                             PhongMaterial* material = (PhongMaterial*) hit.material;
 
                             // add ambient lighting
-                            colour += ambient * material->ambient;
+                            if (enableAmbientLighting) {
+                                colour += ambient * material->ambient;
+                            }
 
                             for (auto i = lights.cbegin(); i != lights.cend(); i++) {
                                 Light* light = *i;
@@ -114,17 +120,21 @@ void render(SceneNode* root, const string& filename, int width, int height,
                                     // add diffuse lighting
                                     Colour diffuse = light->colour * material->diffuse * max(0.0, hit.normal.dot(lightDirection)) / attenuation;
 
-                                    colour += diffuse;
+                                    if (enableDiffuseLighting) {
+                                        colour += diffuse;
+                                    }
 
                                     // add specular lighting
                                     Vector3 reflection = lightDirection.reflect(hit.normal);
 
                                     Colour specular(0, 0, 0);
                                     if (hit.normal.dot(lightDirection) >= 0) {
-                                        specular = light->colour * material->specular * pow(max(0.0, reflection.dot(view)), material->shininess) / attenuation;
+                                        specular = light->colour * material->specular * 0.3 * pow(max(0.0, reflection.dot(view)), material->shininess) / attenuation;
                                     }
 
-                                    colour += specular;
+                                    if (enableSpecularLighting) {
+                                        colour += specular;
+                                    }
                                 }
                             }
                         } else {

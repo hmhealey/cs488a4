@@ -16,6 +16,10 @@ extern int heightOverride;
 extern bool useBoundingSpheres;
 extern bool drawBounds;
 
+extern bool enableAmbientLighting;
+extern bool enableDiffuseLighting;
+extern bool enableSpecularLighting;
+
 int main(int argc, char** argv) {
     string filename = "scene.lua";
 
@@ -69,6 +73,18 @@ int main(int argc, char** argv) {
                     i += 1;
                 }
             }
+        } else if (strcmp(argv[i], "-a") == 0) {
+            enableAmbientLighting = true;
+        } else if (strcmp(argv[i], "-na") == 0) {
+            enableAmbientLighting = false;
+        } else if (strcmp(argv[i], "-d") == 0) {
+            enableDiffuseLighting = true;
+        } else if (strcmp(argv[i], "-nd") == 0) {
+            enableDiffuseLighting = false;
+        } else if (strcmp(argv[i], "-s") == 0) {
+            enableSpecularLighting = true;
+        } else if (strcmp(argv[i], "-ns") == 0) {
+            enableSpecularLighting = false;
         } else {
             filename = argv[i];
         }
