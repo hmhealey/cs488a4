@@ -22,13 +22,13 @@ The program can also be run with a number of arguments to change program behavio
     "-s/-ns" - Enabled or disables specular light calculations. Specular lighting is enabled by default.
 
 Additional Features:
-    -To enable 3x supersampling, run the program with the following command:
+    To enable 3x supersampling, run the program with the following command:
     $ ./rt -ss 3 [path/to/scene]
-    -To enable 3x stochastic sampling, run the program with the following command:
+    To enable 3x stochastic sampling, run the program with the following command:
     $ ./rt -st 3 [path/to/scene]
 
 Additional Data Files:
-    -data/sample.lua - My scene featuring a purple cow stranded on a desert island with a strange buckyball with bull-sharks in the surrounding water.
+    -data/sample.lua - My scene featuring a purple cow stranded on a desert island surrounded by bull sharks.
     -data/sample.png - My scene rendered at 1024x1024 with 4x stochastic sampling.
     -data/sample-stochastic.png - Same as sample.png
     -data/sample-supersampling.png - My scene rendered at 1024x1024 with 4x supersampling.
@@ -40,3 +40,4 @@ Additional Data Files:
 
 Assumptions:
     -That requirements listed in the compilation section exist on the target computer
+    -If you render sample.lua with any antialiasing, use the -w and -h switches to change the size because it takes like 4 hours to render on my Macbook
