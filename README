@@ -1,0 +1,42 @@
+/*****************************************
+ * Harrison Healey - hmhealey - 20376857 *
+ *****************************************/
+
+Compilation:
+    This program was compiled on gl15 using C++11 and libpng.
+
+Running:
+    To run this program, use the following command.
+    $ ./rt [path/to/scene]
+
+The program can also be run with a number of arguments to change program behaviour. Those possible options are:
+    "-d" - Instead of performing full raytracing, simply draw a greyscale image where the colour of each pixel is based off of the depth of each pixel. This option disables most other options.
+    "-ss [num]" - Enables supersampling with num^2 samples performed per pixel. Samples are taken from the center of each cell in a uniform grid in the pixel.
+    "-st [num]" - Enabled stochastic sampling with num^2 samples performed per pixel. Samples are taken from a random point in each cell in a uniform grid in the pixel.
+    "-w [width]" - Overrides the image width specified in the scene lua
+    "-h [height]" - Overrides the image height specified in the scene lua
+    "-b [sphere/box]" - Changes the bounding volumes of meshes to be a sphere or an axis aligned box. If this option isn't specified, a box is used.
+    "-db <sphere/box>" - Enables the drawing of bounding volumes instead of meshes. If sphere or box is specified, sets the type of bounding volume used as if -b was specified.
+    "-a/-na" - Enables or disables ambient light calculations. Ambient lighting is enabled by default.
+    "-d/-nd" - Enables or disables diffuse light calculations. Diffuse lighting is enabled by default.
+    "-s/-ns" - Enabled or disables specular light calculations. Specular lighting is enabled by default.
+
+Additional Features:
+    -To enable 3x supersampling, run the program with the following command:
+    $ ./rt -ss 3 [path/to/scene]
+    -To enable 3x stochastic sampling, run the program with the following command:
+    $ ./rt -st 3 [path/to/scene]
+
+Additional Data Files:
+    -data/sample.lua - My scene featuring a purple cow stranded on a desert island with a strange buckyball with bull-sharks in the surrounding water.
+    -data/sample.png - My scene rendered at 1024x1024 with 4x stochastic sampling.
+    -data/sample-stochastic.png - Same as sample.png
+    -data/sample-supersampling.png - My scene rendered at 1024x1024 with 4x supersampling.
+    -data/sample-noantialiasing - My scene rendered at 1024x1024 with default settings.
+    -data/macho-cows.png - macho-cows.lua rendered with 4x supersampling.
+    -data/macho-cows-bb.png - macho-cows.lua rendered with 4x supersampling and bounding boxes instead of meshes.
+    -data/simple-cows.png - simple-cows.lua rendered with 4x supersampling.
+    -data/nonhier.png - nonhier.lua rendered with 4x supersampling.
+
+Assumptions:
+    -That requirements listed in the compilation section exist on the target computer
